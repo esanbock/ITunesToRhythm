@@ -43,7 +43,7 @@ def processCommandLine( argv ):
 	parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match" )
 	parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
 	parser.add_option("-d", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )
-	options, args = options.parse_args()
+	options, args = parser.parse_args()
 	
 	# check that files are specified
 	if len(args) != 2:
