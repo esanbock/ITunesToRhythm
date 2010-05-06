@@ -96,7 +96,7 @@ class SongCorrelator:
 	def dumpMatch(  self, match ):
 		return match.title + ", rating = " + str(match.rating)
 			
-	def disambiguate(self,song,matches,prompt=False):
+	def disambiguate(self,song,matches,prompt):
 		# attempt to disambiguate by title
 		print "\t looking for secondary match on title"
 		titlematchcount = 0
