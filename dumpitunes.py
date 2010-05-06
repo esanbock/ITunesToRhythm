@@ -33,9 +33,7 @@ def main(argv):
                 print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 
 class iTunesLibraryParser( BaseLibraryParser ):
-	def getSongs(self,location):
-		doc = libxml2.parseFile( location )
-		xpathContext = doc.xpathNewContext()
+	def getSongs(self):
 		allSongNodes = xpathContext.xpathEval("/plist/dict/dict/dict/*/..")
 		allSongs = []
 		for songNode in allSongNodes:

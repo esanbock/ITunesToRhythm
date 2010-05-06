@@ -6,5 +6,10 @@ class BaseSong:
                 self.size = "Unknown"
 
 class BaseLibraryParser:
-	def getSongs(self,location):
+	def __init__(self, location)
+		self.doc = libxml2.parseFile( location )
+		self.xpathContext = doc.xpathNewContext()
+		return
+		
+	def getSongs(self):
 		return
