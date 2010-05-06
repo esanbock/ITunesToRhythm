@@ -46,7 +46,7 @@ class iTunesLibraryParser( BaseLibraryParser ):
 		matchingsongs = []
 		for match in matches:
 			song = iTunesSong( match )
-			matchingsongs.insert( song )
+			matchingsongs.append( song )
 		return matchingsongs
 		
 if __name__ == "__main__":
