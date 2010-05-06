@@ -120,7 +120,7 @@ class SongCorrelator:
 				
 			selection = raw_input("\t\t\t\t?")
 			if len(selection)  > 0:
-				return matches[int(selection - 1)]
+				return matches[int(selection) - 1]
 			
 		return None
 		
