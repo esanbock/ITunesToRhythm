@@ -65,7 +65,7 @@ class SongCorrelator:
 			self.fullMatches + self.fullMatches + 1
 			return match
 	
-		if matchcount > 1
+		if matchcount > 1:
 			print "\t multiple matches"
 			for match in matches:
 				print "\t\t " + match.title + ", rating = " + str(match.rating)
