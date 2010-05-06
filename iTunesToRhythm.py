@@ -75,14 +75,14 @@ class SongCorrelator:
 				print "\t 100% match on " + self.dumpMatch( match )
 				self.fullMatches = self.fullMatches + 1
 			else:
-				match = disambiguate( song, matches, promptForDisambiguate )
+				match = self.disambiguate( song, matches, promptForDisambiguate )
 		# ambiguous match
 		elif matchcount > 1:
 			print "\t multiple matches"
 			for match in matches:
 				print "\t\t " + self.dumpMatch( match )
 			# attempt a resolution
-			match = disambiguate( song, matches, promptForDisambiguate )
+			match = self.disambiguate( song, matches, promptForDisambiguate )
 			# unsuccessful attempt, record ambiguity
 			if len(match == 0):
 				self.ambiguousMatches = self.ambiguousMatches + 1
