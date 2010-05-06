@@ -68,10 +68,12 @@ class SongCorrelator:
 			self.zeroMatches = self.zeroMatches + 1
 		# full match
 		elif matchcount == 1:
-			match = match[0]
-			match.title == song.title:
-			print "\t 100% match on " + dumpMatch( match )
-			self.fullMatches = self.fullMatches + 1
+			match = matches[0]
+			if match.title == song.title:
+				print "\t 100% match on " + dumpMatch( match )
+				self.fullMatches = self.fullMatches + 1
+			else:
+				match = disambiguate( song, matches, promptForDisambiguate )
 		# ambiguous match
 		elif matchcount > 1:
 			print "\t multiple matches"
