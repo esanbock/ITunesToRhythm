@@ -60,7 +60,7 @@ class SongCorrelator:
 			self.zeroMatches = self.zeroMatches + 1
 			return
 			
-		if matchcount == 1 && match.title == song.title:
+		if matchcount == 1 and match.title == song.title:
 			print "\t 100% match on " match.title + ", rating = " + str(match.rating)
 			self.fullMatches + self.fullMatches + 1
 			return match
