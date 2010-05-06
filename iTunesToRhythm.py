@@ -30,7 +30,7 @@ def main(argv):
         for song in allSongs:
                 print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 
-def showUsage(self):
+def showUsage():
 	print "iTunesToRhythm <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>"
 	
 	
