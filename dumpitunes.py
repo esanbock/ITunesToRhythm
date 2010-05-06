@@ -3,11 +3,11 @@ import libxml2
 from songparser import BaseSong, BaseLibraryParser
 
 class iTunesSong( BaseSong ):
-        def __init__(self, song):
-                self.artist = song.xpathEval("string[preceding-sibling::* = 'Artist']")
-                self.album = song.xpathEval("string[preceding-sibling::* = 'Album']")
-                self.title = song.xpathEval("string[preceding-sibling::* = 'Name']")[0].content
-                self.size = song.xpathEval("integer[preceding-sibling::* = 'Size']")
+	def __init__(self, song):
+		self.artist = song.xpathEval("string[preceding-sibling::* = 'Artist']")
+		self.album = song.xpathEval("string[preceding-sibling::* = 'Album']")
+		self.title = song.xpathEval("string[preceding-sibling::* = 'Name']")[0].content
+		self.size = song.xpathEval("integer[preceding-sibling::* = 'Size']")
 		
 		if len(self.artist) == 0:
 			self.artist = "Unknown"
@@ -25,12 +25,12 @@ class iTunesSong( BaseSong ):
 			self.size = self.size[0].content
 
 def main(argv):
-        location = argv[1]
-        print "Reading iTunes library from " + location
+	location = argv[1]
+	print "Reading iTunes library from " + location
 	parser = iTunesLibraryParser(location);
-        allSongs = parser.getSongs( )
-        for song in allSongs:
-                print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
+	allSongs = parser.getSongs( )
+	for song in allSongs:
+		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 
 class iTunesLibraryParser( BaseLibraryParser ):
 	def getSongs(self):

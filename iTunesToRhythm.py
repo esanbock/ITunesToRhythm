@@ -31,7 +31,7 @@ def main(argv):
 	allRhythmSongs = rhythmParser.getSongs()
 	
 	# go through each song in rhythmbox
-	for song in allSongs:
+	for song in allRhythmSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 		# find equivalent itunes song
 		correlateSongs( song, ituneSparser );
