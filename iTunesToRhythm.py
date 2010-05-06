@@ -19,8 +19,8 @@ def main(argv):
 	print "Using RhythmBox database " + args[1]
 
 	#open the libraries
-	rhythmParser = RhythmLibraryParser(args[0]);
-	itunesParser = iTunesLibraryParser(args[1]);
+	rhythmParser = RhythmLibraryParser(args[1]);
+	itunesParser = iTunesLibraryParser(args[0]);
 	allRhythmSongs = rhythmParser.getSongs()
 	
 	# go through each song in rhythmbox
