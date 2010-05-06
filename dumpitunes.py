@@ -8,6 +8,7 @@ class iTunesSong( BaseSong ):
 		self.album = song.xpathEval("string[preceding-sibling::* = 'Album']")
 		self.title = song.xpathEval("string[preceding-sibling::* = 'Name']")[0].content
 		self.size = song.xpathEval("integer[preceding-sibling::* = 'Size']")
+		self.rating = song.xpathEval("integer[preceding-sibling::* = 'Rating']")
 		
 		if len(self.artist) == 0:
 			self.artist = "Unknown"
@@ -23,6 +24,11 @@ class iTunesSong( BaseSong ):
 			self.size = "Unknown"
 		else:
 			self.size = self.size[0].content
+			
+		if len(rating.size) == 0:
+			self.rating = 0
+		else:
+			self.rating = int(self.size[0].content)
 
 def main(argv):
 	location = argv[1]

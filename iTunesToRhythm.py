@@ -39,10 +39,11 @@ def main(argv):
 def correlateSongs( song, parser ):
 	matches = parser.findSongBySize( song.size );
 	for match in matches:
-		print "\t found match in " + song.title
-	if len(matches) == 0:
+		print "\t found match in " + song.title + " - rating = " + song.rating
+		matchcount++
+	if len(matchcount) == 0:
 		print "\t no matches found"
-		
+	
 def showUsage():
 	print "iTunesToRhythm <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>"
 
