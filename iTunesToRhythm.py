@@ -117,9 +117,10 @@ class SongCorrelator:
 			for match in matches:
 				numMatch = numMatch + 1
 				print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match)
+				
 			selection = raw_input("\t\t\t\t?")
 			if len(selection)  > 0:
-				return matches[int(selection)]
+				return matches[int(selection - 1)]
 			
 		return None
 		
