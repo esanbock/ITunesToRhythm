@@ -40,7 +40,7 @@ def correlateSongs( song, parser ):
 	matches = parser.findSongBySize( song.size );
 	matchcount = 0
 	for match in matches:
-		print "\t found match in " + song.title + " - rating = " + song.rating
+		print "\t found match in " + match.title + " - rating = " + match.rating
 		matchcount = matchcount + 1
 	if len(matchcount) == 0:
 		print "\t no matches found"
