@@ -112,7 +112,7 @@ class SongCorrelator:
 				numMatch = numMatch + 1
 				print "[" + str(numMatch) + "] " + dumpMatch(match)
 			selection = input("?")
-			if len(selection)  > 0
+			if len(selection)  > 0:
 				return matches[selection]
 			
 		return None
