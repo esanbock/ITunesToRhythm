@@ -30,8 +30,7 @@ def main(argv):
 		# find equivalent itunes song
 		match = correlator.correlateSong( song )
 		# update database, if match
-		if match != None 
-			if options.w == True:
+		if len(match) > 0 and options.w == True:
 				song.setRating( match.Rating / 20 )
 		
 	# dump summary results
