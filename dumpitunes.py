@@ -34,7 +34,7 @@ def main(argv):
 
 class iTunesLibraryParser( BaseLibraryParser ):
 	def getSongs(self):
-		allSongNodes = xpathContext.xpathEval("/plist/dict/dict/dict/*/..")
+		allSongNodes = self.xpathContext.xpathEval("/plist/dict/dict/dict/*/..")
 		allSongs = []
 		for songNode in allSongNodes:
 		        itunesSong = iTunesSong( songNode )
