@@ -35,7 +35,7 @@ def main(argv):
 	for song in allRhythmSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 		# find equivalent itunes song
-		correlateSong( song )
+		correlator.correlateSong( song )
 		
 	# dump summary results
 	print "full matches = " + str( correlator.fullMatches )
