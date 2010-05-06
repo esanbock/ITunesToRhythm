@@ -10,7 +10,7 @@ class BaseSong:
 class BaseLibraryParser:
 	def __init__(self, location):
 		self.doc = libxml2.parseFile( location )
-		self.xpathContext = doc.xpathNewContext()
+		self.xpathContext = self.doc.xpathNewContext()
 		return
 		
 	def getSongs(self):
