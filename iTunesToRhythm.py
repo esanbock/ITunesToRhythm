@@ -46,7 +46,7 @@ def processCommandLine( argv ):
 	options, args = options.parse_args()
 	
 	# check that files are specified
-	if len(args) <> 2
+	if len(args) != 2:
 		parser.error( "you must supply 2 files names" )
 	return options, args
 
