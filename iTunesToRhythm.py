@@ -111,7 +111,7 @@ class SongCorrelator:
 			self.fullMatches = self.fullMatches + 1
 			return latstitlematch
 		
-		if prompt == true:
+		if prompt == True:
 			print "\t\t cannot disambiguate.  Please select file or press <Enter> for no match:"
 			numMatch = 0
 			for match in matches:
