@@ -34,7 +34,7 @@ def main(argv):
 	for song in allRhythmSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 		# find equivalent itunes song
-		correlateSongs( song, ituneSparser );
+		correlateSongs( song, itunesParser );
 
 def correlateSongs( song, parser ):
 	matches = parser.findSongBySize( song.size );
