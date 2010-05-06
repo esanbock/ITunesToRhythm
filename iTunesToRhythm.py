@@ -60,6 +60,7 @@ class SongCorrelator:
 
 	# attempt to find matching song in database
 	def correlateSong( self, song, confirm, promptForDisambiguate ):
+		match = None
 		matches = self.parser.findSongBySize( song.size );
 		matchcount = len(matches)
 		
