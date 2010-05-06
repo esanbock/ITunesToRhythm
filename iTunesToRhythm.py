@@ -16,7 +16,7 @@ def main(argv):
 	# process command line
 	options, args = processCommandLine(argv)
 	print "Reading iTunes database from " + args[0]
-	print "Reading RhythmBox database from " + args[1]
+	print "Using RhythmBox database " + args[1]
 
 	#open the libraries
 	rhythmParser = RhythmLibraryParser(args[0]);
@@ -24,13 +24,13 @@ def main(argv):
 	allRhythmSongs = rhythmParser.getSongs()
 	
 	# go through each song in rhythmbox
-	correlator = SongCorrelator(itunesParser, options.c, options.d)
+	correlator = SongCorrelator(itunesParser, options.confirm, options.promptForDisambiguate)
 	for song in allRhythmSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 		# find equivalent itunes song
 		match = correlator.correlateSong( song )
 		# update database, if match
-		if len(match) > 0 and options.w == True:
+		if len(match) > 0 and options.writeChanges == True:
 				song.setRating( match.Rating / 20 )
 		
 	# dump summary results
