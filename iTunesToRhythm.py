@@ -24,11 +24,11 @@ def main(argv):
 	allRhythmSongs = rhythmParser.getSongs()
 	
 	# go through each song in rhythmbox
-	correlator = SongCorrelator(itunesParser, options.confirm, options.promptForDisambiguate)
+	correlator = SongCorrelator(itunesParser)
 	for song in allRhythmSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 		# find equivalent itunes song
-		match = correlator.correlateSong( song )
+		match = correlator.correlateSong( song, options.confirm, options.promptForDisambiguate )
 		# update database, if match
 		if len(match) > 0 and options.writeChanges == True:
 				song.setRating( match.Rating / 20 )
@@ -51,14 +51,15 @@ def processCommandLine( argv ):
 	return options, args
 
 class SongCorrelator:
-	def __init__(self, parser, confirm = False, promptForDisambiguate = False ):
+	def __init__(self, parser ):
 		self.parser = parser
 		self.zeroMatches = 0
 		self.fullMatches = 0
 		self.ambiguousMatches = 0;
 
+
 	# attempt to find matching song in database
-	def correlateSong( self, song ):
+	def correlateSong( self, song, confirm, promptForDisambiguate ):
 		matches = self.parser.findSongBySize( song.size );
 		matchcount = len(matches)
 		
