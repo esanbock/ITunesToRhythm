@@ -25,10 +25,10 @@ class iTunesSong( BaseSong ):
 		else:
 			self.size = self.size[0].content
 			
-		if len(self.rating.size) == 0:
+		if len(self.rating) == 0:
 			self.rating = 0
 		else:
-			self.rating = int(self.size[0].content)
+			self.rating = int(self.rating[0].content)
 
 def main(argv):
 	location = argv[1]
