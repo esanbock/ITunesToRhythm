@@ -24,11 +24,15 @@ def main(argv):
 	allRhythmSongs = rhythmParser.getSongs()
 	
 	# go through each song in rhythmbox
-	correlator = SongCorrelator(itunesParser, options.c, options.d, options.w)
+	correlator = SongCorrelator(itunesParser, options.c, options.d)
 	for song in allRhythmSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 		# find equivalent itunes song
-		correlator.correlateSong( song )
+		match = correlator.correlateSong( song )
+		# update database, if match
+		if( match != None )
+			if options.w == True:
+				song.setRating( match.Rating / 20 )
 		
 	# dump summary results
 	print "full matches = " + str( correlator.fullMatches )
@@ -48,7 +52,7 @@ def processCommandLine( argv ):
 	return options, args
 
 class SongCorrelator:
-	def __init__(self, parser, confirm = False, promptForDisambiguate = False, writeChanges = False ):
+	def __init__(self, parser, confirm = False, promptForDisambiguate = False ):
 		self.parser = parser
 		self.zeroMatches = 0
 		self.fullMatches = 0
@@ -63,29 +67,31 @@ class SongCorrelator:
 		if matchcount == 0:
 			print "\t no matches found"
 			self.zeroMatches = self.zeroMatches + 1
-			return
 		# full match
-		if matchcount == 1 and match.title == song.title:
+		elif matchcount == 1 and match.title == song.title:
 			print "\t 100% match on " + dumpMatch( match )
 			self.fullMatches = self.fullMatches + 1
-			return match
-			
 		# ambiguous match
-		if matchcount > 1:
+		elif matchcount > 1:
 			print "\t multiple matches"
 			for match in matches:
 				print "\t\t " + dumpMatch( match )
 			# attempt a resolution
-			match = disambiguate( song, matches )
+			match = disambiguate( song, matches, promptForDisambiguate )
 			# unsuccessful attempt, record ambiguity
 			if match == None:
 				self.ambiguousMatches = self.ambiguousMatches + 1
-			return match
+		#review
+		if confirm == True:
+			input('press <enter> to continue')
+			
+		#done
+		return match
 
-	def dumpMatch( self, match ):
+	def dumpMatch(  self, match ):
 		return match.title + ", rating = " + str(match.rating)
 			
-	def disambiguate(self,song,matches):
+	def disambiguate(self,song,matches,prompt=false):
 		# attempt to disambiguate by title
 		print "\t looking for secondary match on title"
 		titlematchcount = 0
@@ -99,6 +105,17 @@ class SongCorrelator:
 			print "\t\t disambiguated using title"
 			self.fullMatches = self.fullMatches + 1
 			return latstitlematch
+		
+		if prompt == true:
+			print "\t\t cannot disambiguate.  Please select file or press <Enter> for no match:"
+			numMatch = 0
+			for match in matches:
+				numMatch = numMatch + 1
+				print "[" + str(numMatch) + "] " + dumpMatch(match)
+			selection = input("?")
+			if len(selection)  > 0
+				return matches[selection]
+			
 		return None
 		
 	
