@@ -31,20 +31,46 @@ def main(argv):
 	allRhythmSongs = rhythmParser.getSongs()
 	
 	# go through each song in rhythmbox
+	correlator = SongCorrelator(itunesParser)
 	for song in allRhythmSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 		# find equivalent itunes song
-		correlateSongs( song, itunesParser );
+		correlateSong( song )
+		
+	# dump summary results
+	print "full matches = " + str( correlator.fullMatches )
+	print "zero matches = " + str( correlator.zeroMatches )
+	print "ambiguous matches = " + str( correlator.ambiguousMatches )
 
-def correlateSongs( song, parser ):
-	matches = parser.findSongBySize( song.size );
-	matchcount = 0
-	for match in matches:
-		print "\t found match in " + match.title + " - rating = " + str(match.rating)
-		matchcount = matchcount + 1
-	if matchcount == 0:
-		print "\t no matches found"
+class SongCorrelator:
+	def __init__(self, parser ):
+		self.parser = parser
+		self.zeroMatches = 0
+		self.fullMatches = 0
+		self.ambiguousMatches = 0;
+
+	def correlateSong( self, song ):
+		matches = self.parser.findSongBySize( song.size );
+		matchcount = 0
+		for match in matches:
+			matchcount = matchcount + 1
+			
+		if matchcount == 0:
+			print "\t no matches found"
+			self.zeroMatches = self.zeroMatches + 1
+			return
+			
+		if matchcount == 1 && match.title == song.title:
+			print "\t 100% match on " match.title + ", rating = " + str(match.rating)
+			self.fullMatches + self.fullMatches + 1
+			return match
 	
+		if matchcount > 1
+			print "\t multiple matches"
+			for match in matches:
+				print match.title + ", rating = " + str(match.rating)
+			self.ambiguousMatches = self.ambiguousMatches + 1
+		
 def showUsage():
 	print "iTunesToRhythm <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>"
 
