@@ -19,7 +19,7 @@ def main(argv):
 
 class RhythmLibraryParser( BaseLibraryParser ):
 	def getSongs(self):
-		allSongNodes = xpathContext.xpathEval("//entry[@type='song']")
+		allSongNodes = self.xpathContext.xpathEval("//entry[@type='song']")
 		allSongs = []
 		for songNode in allSongNodes:
 		        rhythmsong = RhythmSong( songNode )

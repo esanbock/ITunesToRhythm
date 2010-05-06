@@ -40,7 +40,15 @@ class iTunesLibraryParser( BaseLibraryParser ):
 		        itunesSong = iTunesSong( songNode )
 			allSongs.append( itunesSong )
 		return allSongs
-
+	
+	def findSongBySize( self, size ):
+		matches = self.xpathContext.xpathEval("/plist/dict/dict/dict[integer = '" + str(size) + "']")
+		matchingsongs = []
+		for match in matches:
+			song = iTunesSong( match )
+			matchingsongs.insert( song )
+		return matchingsongs
+		
 if __name__ == "__main__":
         main(sys.argv)
 
