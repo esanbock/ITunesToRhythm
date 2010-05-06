@@ -3,11 +3,15 @@ import libxml2
 from songparser import BaseSong, BaseLibraryParser
 
 class RhythmSong(BaseSong):
-	def __init__(self, song):
-		self.artist = song.xpathEval("artist")[0].content
-		self.album = song.xpathEval("album")[0].content
-		self.title = song.xpathEval("title")[0].content
-		self.size = song.xpathEval("file-size")[0].content
+	def __init__(self, node):
+		self.xmlNode = node
+		self.artist = self.xmlNode.xpathEval("artist")[0].content
+		self.album = self.xmlNode.xpathEval("album")[0].content
+		self.title = self.xmlNode.xpathEval("title")[0].content
+		self.size = self.xmlNode.xpathEval("file-size")[0].content
+	
+	def setRating( self, rating ):
+		self.xmlNode.xpathEval("rating")[0].setContent( str(rating) )
 
 def main(argv):
 	location = argv[1]
