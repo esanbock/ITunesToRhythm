@@ -1,3 +1,5 @@
+import libxml2
+
 class BaseSong:
         def __init__(self, song):
                 self.artist = "Unknown"
