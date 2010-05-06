@@ -66,9 +66,23 @@ class SongCorrelator:
 			return match
 	
 		if matchcount > 1:
+			#ambiguous match
 			print "\t multiple matches"
 			for match in matches:
 				print "\t\t " + match.title + ", rating = " + str(match.rating)
+			print "\t looking for secondary match on title"
+			titlematchcount = 0
+			# attempt to disambiguate by title
+			for match in matches:
+				if match.title == song.title:
+					titlematchcount = titlematchcount + 1
+					latsttitlematch = match
+			if titlematch = 1:
+				# we successfully disambiguated using the title
+				print "\t\t disambiguated using title"
+				self.fullMatches = self.fullMatches + 1
+				return lasttitlematch
+			# unsuccessful attempt, record ambiguity
 			self.ambiguousMatches = self.ambiguousMatches + 1
 		
 def showUsage():
