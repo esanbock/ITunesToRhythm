@@ -133,12 +133,12 @@ class SongCorrelator:
 			
 			if resultNum < min or resultNum > max:
 				print "out of range"
-				return self.inputNumber( msg )
+				return self.inputNumber( msg, min, max )
 				
 			return resultNum
 		except:
 			print "invalid input"
-			return self.inputNumber(msg)
+			return self.inputNumber(msg, min, max)
 		
 	
 if __name__ == "__main__":
