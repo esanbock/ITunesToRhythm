@@ -25,7 +25,7 @@ class iTunesSong( BaseSong ):
 		else:
 			self.size = self.size[0].content
 			
-		if len(rating.size) == 0:
+		if len(self.rating.size) == 0:
 			self.rating = 0
 		else:
 			self.rating = int(self.size[0].content)
