@@ -88,7 +88,7 @@ class SongCorrelator:
 				self.ambiguousMatches = self.ambiguousMatches + 1
 		#review
 		if confirm == True:
-			foo = input( 'press enter to continue')
+			foo = raw_input( 'press <enter> to continue')
 			
 		#done
 		return match
