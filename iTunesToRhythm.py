@@ -118,11 +118,27 @@ class SongCorrelator:
 				numMatch = numMatch + 1
 				print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match)
 				
-			selection = raw_input("\t\t\t\t?")
-			if len(selection)  > 0:
-				return matches[int(selection) - 1]
+			selection = self.inputNumber("\t\t\t\t? ")
+			if selection > 0:
+				return matches[selection - 1]
 			
 		return None
+	
+	def inputNumber(self, msg):
+		result = raw_input(msg)
+		if len(result) == 0:
+			return 0
+		try:
+			resultNum = int(result)
+			
+			if resultNum < min or resultNum > max:
+				print "out of range"
+				return self.inputNumber( msg )
+				
+			return resultNum
+		except:
+			print "invalid input"
+			return self.inputNumber(msg)
 		
 	
 if __name__ == "__main__":
