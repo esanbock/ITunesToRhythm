@@ -30,7 +30,7 @@ def main(argv):
 		# find equivalent itunes song
 		match = correlator.correlateSong( song )
 		# update database, if match
-		if( match != None )
+		if match != None 
 			if options.w == True:
 				song.setRating( match.Rating / 20 )
 		
@@ -47,7 +47,7 @@ def processCommandLine( argv ):
 	options, args = options.parse_args()
 	
 	# check that files are specified
-	if( len(args) != 2 )
+	if len(args) != 2
 		parser.error( "you must supply 2 files names" )
 	return options, args
 
