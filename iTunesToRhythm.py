@@ -79,7 +79,7 @@ class SongCorrelator:
 			# attempt a resolution
 			match = disambiguate( song, matches, promptForDisambiguate )
 			# unsuccessful attempt, record ambiguity
-			if match == None:
+			if len(match == 0):
 				self.ambiguousMatches = self.ambiguousMatches + 1
 		#review
 		if confirm == True:
