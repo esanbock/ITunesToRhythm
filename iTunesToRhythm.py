@@ -76,12 +76,12 @@ class SongCorrelator:
 			for match in matches:
 				if match.title == song.title:
 					titlematchcount = titlematchcount + 1
-					latsttitlematch = match
+					latstitlematch = match
 			if titlematchcount == 1:
 				# we successfully disambiguated using the title
 				print "\t\t disambiguated using title"
 				self.fullMatches = self.fullMatches + 1
-				return lasttitlematch
+				return latstitlematch
 			# unsuccessful attempt, record ambiguity
 			self.ambiguousMatches = self.ambiguousMatches + 1
 		
