@@ -61,14 +61,14 @@ class SongCorrelator:
 			return
 			
 		if matchcount == 1 and match.title == song.title:
-			print "\t 100% match on " match.title + ", rating = " + str(match.rating)
+			print "\t 100% match on " + match.title + ", rating = " + str(match.rating)
 			self.fullMatches + self.fullMatches + 1
 			return match
 	
 		if matchcount > 1
 			print "\t multiple matches"
 			for match in matches:
-				print match.title + ", rating = " + str(match.rating)
+				print "\t\t " + match.title + ", rating = " + str(match.rating)
 			self.ambiguousMatches = self.ambiguousMatches + 1
 		
 def showUsage():
