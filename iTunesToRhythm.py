@@ -70,7 +70,7 @@ class SongCorrelator:
 		elif matchcount == 1:
 			match = matches[0]
 			if match.title == song.title:
-				print "\t 100% match on " + dumpMatch( match )
+				print "\t 100% match on " + self.dumpMatch( match )
 				self.fullMatches = self.fullMatches + 1
 			else:
 				match = disambiguate( song, matches, promptForDisambiguate )
@@ -78,7 +78,7 @@ class SongCorrelator:
 		elif matchcount > 1:
 			print "\t multiple matches"
 			for match in matches:
-				print "\t\t " + dumpMatch( match )
+				print "\t\t " + self.dumpMatch( match )
 			# attempt a resolution
 			match = disambiguate( song, matches, promptForDisambiguate )
 			# unsuccessful attempt, record ambiguity
