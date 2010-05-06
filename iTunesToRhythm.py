@@ -42,7 +42,7 @@ def correlateSongs( song, parser ):
 	for match in matches:
 		print "\t found match in " + match.title + " - rating = " + str(match.rating)
 		matchcount = matchcount + 1
-	if len(matchcount) == 0:
+	if matchcount == 0:
 		print "\t no matches found"
 	
 def showUsage():
