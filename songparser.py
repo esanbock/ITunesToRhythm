@@ -24,6 +24,7 @@ class BaseSong:
 		self.size = "Unknown"
 		self.rating = 0
 		self.playcount = 0
+		self.filePath = ""
 
 class BaseLibraryParser:
 	def __init__(self, location):

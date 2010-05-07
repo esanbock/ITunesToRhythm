@@ -25,6 +25,7 @@ class RhythmSong(BaseSong):
 		self.album = self.xmlNode.xpathEval("album")[0].content
 		self.title = self.xmlNode.xpathEval("title")[0].content
 		self.size = self.xmlNode.xpathEval("file-size")[0].content
+		self.filePath = self.xmlNode.xpathEval("location")[0].content
 	
 	def setRating( self, rating ):
 		ratingNode = self.xmlNode.xpathEval("rating")

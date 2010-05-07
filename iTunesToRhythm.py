@@ -123,7 +123,7 @@ class SongCorrelator:
 		return match
 
 	def dumpMatch(  self, match ):
-		return match.title + ", rating = " + str(match.rating)
+		return match.title + ", playcount = " + str(match.playcount) + ", rating = " + str(match.rating)
 			
 	def disambiguate(self,song,matches,prompt):
 		# attempt to disambiguate by title
@@ -141,11 +141,12 @@ class SongCorrelator:
 			return latstitlematch
 		
 		if prompt == True:
-			print "\t\t cannot disambiguate.  Please select file or press <Enter> for no match:"
+			print "\t\t cannot disambiguate.  Trying to match " + song.filePath
+			print "Please select file or press <Enter> for no match:"
 			numMatch = 0
 			for match in matches:
 				numMatch = numMatch + 1
-				print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match)
+				print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match) + ", " + match.filePath
 				
 			selection = self.inputNumber("\t\t\t\t? ", 1, len(matches) )
 			if selection > 0:

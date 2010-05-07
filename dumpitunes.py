@@ -26,6 +26,7 @@ class iTunesSong( BaseSong ):
 		self.size = song.xpathEval("integer[preceding-sibling::* = 'Size']")
 		self.rating = song.xpathEval("integer[preceding-sibling::* = 'Rating']")
 		self.playcount = song.xpathEval("integer[preceding-sibling::* = 'Play Count']")
+		self.filePath = song.xpathEval("string[preceding-sibling::* = 'Location']")[0].content
 		
 		if len(self.artist) == 0:
 			self.artist = "Unknown"
