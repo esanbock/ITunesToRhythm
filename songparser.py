@@ -17,5 +17,5 @@ class BaseLibraryParser:
 	def getSongs(self):
 		return
 	
-	def save(self): 
-		self.doc.saveFile( "testoutput.xml" )
+	def save(self, location): 
+		self.doc.saveFile( location )

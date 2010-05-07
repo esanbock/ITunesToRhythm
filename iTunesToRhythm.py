@@ -28,7 +28,7 @@ def main(argv):
 	for song in allRhythmSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
 		# find equivalent itunes song
-		match = correlator.correlateSong( song, options.confirm, options.promptForDisambiguate )
+		match = correlator.correlateSong( song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate )
 		# update database, if match
 		if match != None and options.writeChanges == True:
 			song.setRating( match.rating / 20 )
@@ -36,24 +36,26 @@ def main(argv):
 	# save
 	if options.writeChanges == True:
 		print "writing changes to file"
-		rhythmParser.save()
+		rhythmParser.save( args[1] )
 
 	# dump summary results
 	print "full matches = " + str( correlator.fullMatches )
 	print "zero matches = " + str( correlator.zeroMatches )
-	print "ambiguous matches = " + str( correlator.ambiguousMatches )
+	print "unresolved ambiguous matches = " + str( correlator.ambiguousMatches )
 
 def processCommandLine( argv ):
-	parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>")
-	parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match" )
-	parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
-	parser.add_option("-d", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )
-	options, args = parser.parse_args()
-	
-	# check that files are specified
-	if len(args) != 2:
-		parser.error( "you must supply 2 files names" )
-	return options, args
+    parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>")
+    parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match" )
+    parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
+    parser.add_option("-d", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )
+    parser.add_option("-l",  "--fastandloose", action="store_true", dest= "fastAndLoose",  default = False,  help = "ignore differences in files name when a file size match is made against  a single song.   Will not resolve multiple matches" )
+    # parse options
+    options, args = parser.parse_args()
+
+    # check that files are specified
+    if len(args) != 2:
+        parser.error( "you must supply 2 files names" )
+    return options, args
 
 class SongCorrelator:
 	def __init__(self, parser ):
@@ -64,7 +66,7 @@ class SongCorrelator:
 
 
 	# attempt to find matching song in database
-	def correlateSong( self, song, confirm, promptForDisambiguate ):
+	def correlateSong( self, song, confirm, fastAndLoose,  promptForDisambiguate ):
 		match = None
 		matches = self.parser.findSongBySize( song.size );
 		matchcount = len(matches)
@@ -79,10 +81,10 @@ class SongCorrelator:
 			if match.title == song.title:
 				print "\t 100% match on " + self.dumpMatch( match )
 				self.fullMatches = self.fullMatches + 1
-			else:
+			elif fastAndLoose == False:
 				match = self.disambiguate( song, matches, promptForDisambiguate )
-		# ambiguous match
-		elif matchcount > 1:
+		# multiple matches
+		else:
 			print "\t multiple matches"
 			for match in matches:
 				print "\t\t " + self.dumpMatch( match )
