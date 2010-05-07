@@ -33,6 +33,11 @@ def main(argv):
 		if match != None and options.writeChanges == True:
 			song.setRating( match.rating / 20 )
 			print "\t\t\tRating changed to " + str( match.rating / 20 )
+	# save
+	if options.writeChanges == True:
+		print "writing changes to file"
+		rhythmParser.save()
+
 	# dump summary results
 	print "full matches = " + str( correlator.fullMatches )
 	print "zero matches = " + str( correlator.zeroMatches )
