@@ -1,9 +1,18 @@
-#!/usr/bin/env python2.3
+#!/usr/bin/env python
 #
-#  iTunesToRhythm.py
-#  
+# iTunesToRhythm is free software; you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation; either version 3 of the License, or
+#(at your option) any later version.
 #
+#iTunesToRhythm is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
 #
+#You should have received a copy of the GNU General Public License
+#along with Rhythmbox; if not, write to the Free Software Foundation, Inc.,
+#51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
 import libxml2
@@ -35,17 +44,20 @@ def main(argv):
 			print "\t\t\tRating changed to " + str( match.rating / 20 )
 			song.setPlaycount( match.playcount )
 			print "\t\t\Play count changed to " + str( match.playcount )
-	# save
-	if options.writeChanges == True:
-		print "writing changes to file"
-		rhythmParser.save( args[1] )
 
 	# dump summary results
-	print "full matches = " + str( correlator.fullMatches )
-	print "zero matches = " + str( correlator.zeroMatches )
-	print "unresolved ambiguous matches = " + str( correlator.ambiguousMatches )
-	print "partial matches = " + str( correlator.partialMatches)
 	print "manually resolved matches = " + str( correlator.manuallyResolvedMatches)
+	print "full matches = " + str( correlator.fullMatches )
+	print "partial matches = " + str( correlator.partialMatches)
+	print "no matches = " + str( correlator.zeroMatches )
+	print "unresolved ambiguous matches = " + str( correlator.ambiguousMatches )
+
+	# save
+	if options.writeChanges == True:
+		rhythmParser.save( args[1] )
+		print "Changes were written to " + args[1]
+	else:
+		print "Changes were not written to " + args[1] + "\n\tuse -w to actually write changes to disk" 
 
 def processCommandLine( argv ):
     parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>")
@@ -58,7 +70,8 @@ def processCommandLine( argv ):
 
     # check that files are specified
     if len(args) != 2:
-        parser.error( "you must supply 2 files names" )
+	parser.print_help()
+        parser.error( "you must supply 2 file names" )
     return options, args
 
 class SongCorrelator:
