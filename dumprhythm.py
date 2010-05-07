@@ -11,7 +11,13 @@ class RhythmSong(BaseSong):
 		self.size = self.xmlNode.xpathEval("file-size")[0].content
 	
 	def setRating( self, rating ):
-		self.xmlNode.xpathEval("rating")[0].setContent( str(rating) )
+		ratingNode = self.xmlNode.xpathEval("rating")
+	        if len(ratingNode) == 0:
+			newNode = libxml2.newNode("rating")
+          		newNode.setContent(str(rating))
+            		self.xmlNode.addChild(newNode)
+        	else:    
+            		ratingNode[0].setContent( str(rating) )
 
 def main(argv):
 	location = argv[1]

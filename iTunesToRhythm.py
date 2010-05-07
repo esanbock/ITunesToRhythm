@@ -31,8 +31,8 @@ def main(argv):
 		match = correlator.correlateSong( song, options.confirm, options.promptForDisambiguate )
 		# update database, if match
 		if match != None and options.writeChanges == True:
-				song.setRating( match.Rating / 20 )
-		
+			song.setRating( match.rating / 20 )
+			print "\t\t\tRating changed to " + str( match.rating / 20 )
 	# dump summary results
 	print "full matches = " + str( correlator.fullMatches )
 	print "zero matches = " + str( correlator.zeroMatches )
