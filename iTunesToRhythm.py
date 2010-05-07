@@ -46,6 +46,7 @@ def main(argv):
 			print "\t\t\Play count changed to " + str( match.playcount )
 
 	# dump summary results
+	print "\nSummary\n------------------------------------"
 	print "manually resolved matches = " + str( correlator.manuallyResolvedMatches)
 	print "full matches = " + str( correlator.fullMatches )
 	print "partial matches = " + str( correlator.partialMatches)
@@ -100,11 +101,11 @@ class SongCorrelator:
 				print "\t 100% match on " + self.dumpMatch( match )
 				self.fullMatches = self.fullMatches + 1
 			else:
-					if fastAndLoose == False:
-						match = self.disambiguate( song, matches, promptForDisambiguate )
-					else:
-						print "\t 50% match on " + self.dumpMatch( match )
-						self.partialMatches = self.partialMatches + 1
+				if fastAndLoose == False:
+					match = self.disambiguate( song, matches, promptForDisambiguate )
+				else:
+					print "\t 50% match on " + self.dumpMatch( match )
+					self.partialMatches = self.partialMatches + 1
 		# multiple matches
 		else:
 			print "\t multiple matches"
@@ -112,12 +113,10 @@ class SongCorrelator:
 				print "\t\t " + self.dumpMatch( match )
 			# attempt a resolution
 			match = self.disambiguate( song, matches, promptForDisambiguate )
-			# unsuccessful attempt, record ambiguity
-			if match == None:
-				self.ambiguousMatches = self.ambiguousMatches + 1
+		
 		#review
 		if confirm == True:
-			foo = raw_input( 'press <enter> to continue')
+			foo = raw_input( 'press <enter> to continue, Ctrl-C to cancel')
 			
 		#done
 		return match
@@ -153,6 +152,8 @@ class SongCorrelator:
 				self.manuallyResolvedMatches = self.manuallyResolvedMatches + 1
 				return matches[selection - 1]
 			
+		# user did not select, record ambiguity
+		self.ambiguousMatches = self.ambiguousMatches + 1
 		return None
 	
 	def inputNumber(self, msg, min, max):
