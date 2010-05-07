@@ -7,6 +7,7 @@ class BaseSong:
 		self.title = "Unknown"
 		self.size = "Unknown"
 		self.rating = 0
+		self.playcount = 0
 
 class BaseLibraryParser:
 	def __init__(self, location):

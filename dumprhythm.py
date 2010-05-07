@@ -19,6 +19,15 @@ class RhythmSong(BaseSong):
         	else:    
             		ratingNode[0].setContent( str(rating) )
 
+	def setPlaycount( self, playcount ):
+		playcountNode = self.xmlNode.xpathEval("play-count")
+	        if len(playcountNode) == 0:
+			newNode = libxml2.newNode("play-count")
+          		newNode.setContent(str(playcount))
+            		self.xmlNode.addChild(newNode)
+        	else:    
+            		playcountNode[0].setContent( str(playcount) )
+
 def main(argv):
 	location = argv[1]
 	print "Reading database from " + location

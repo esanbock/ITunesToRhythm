@@ -33,6 +33,8 @@ def main(argv):
 		if match != None and options.writeChanges == True:
 			song.setRating( match.rating / 20 )
 			print "\t\t\tRating changed to " + str( match.rating / 20 )
+			song.setPlaycount( match.playcount )
+			print "\t\t\Play count changed to " + str( match.playcount )
 	# save
 	if options.writeChanges == True:
 		print "writing changes to file"
@@ -42,6 +44,8 @@ def main(argv):
 	print "full matches = " + str( correlator.fullMatches )
 	print "zero matches = " + str( correlator.zeroMatches )
 	print "unresolved ambiguous matches = " + str( correlator.ambiguousMatches )
+	print "partial matches = " + str( correlator.partialMatches)
+	print "manually resolved matches = " + str( correlator.manuallyResolvedMatches)
 
 def processCommandLine( argv ):
     parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>")
@@ -63,7 +67,8 @@ class SongCorrelator:
 		self.zeroMatches = 0
 		self.fullMatches = 0
 		self.ambiguousMatches = 0;
-
+		self.partialMatches = 0;
+		self.manuallyResolvedMatches = 0;
 
 	# attempt to find matching song in database
 	def correlateSong( self, song, confirm, fastAndLoose,  promptForDisambiguate ):
@@ -81,8 +86,12 @@ class SongCorrelator:
 			if match.title == song.title:
 				print "\t 100% match on " + self.dumpMatch( match )
 				self.fullMatches = self.fullMatches + 1
-			elif fastAndLoose == False:
-				match = self.disambiguate( song, matches, promptForDisambiguate )
+			else:
+					if fastAndLoose == False:
+						match = self.disambiguate( song, matches, promptForDisambiguate )
+					else:
+						print "\t 50% match on " + self.dumpMatch( match )
+						self.partialMatches = self.partialMatches + 1
 		# multiple matches
 		else:
 			print "\t multiple matches"
@@ -127,6 +136,7 @@ class SongCorrelator:
 				
 			selection = self.inputNumber("\t\t\t\t? ", 1, len(matches) )
 			if selection > 0:
+				self.manuallyResolvedMatches = self.manuallyResolvedMatches + 1
 				return matches[selection - 1]
 			
 		return None
