@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>iTunesToRhythm</title>
+
+  
+  
+  <style type="text/css">
+h1 {
+  border-style: solid;
+  background-color: #cc9933;
+}
+p {
+  font-family: "Times New Roman",Times,serif;
+  background-position: left center;
+  background-attachment: fixed;
+}
+code {
+  font-family: Courier New;
+  font-size: small;
+}
+command {
+  border-style: solid;
+  border-width: 1px;
+  font-family: Courier New;
+  font-size: small;
+  background-color: #ffffcc;
+}
+
+  </style>
+</head><body>
+<h1>iTunesToRhythm</h1>
+
+<p>This little piece of insanitym is a tool that transfers your iTunes
+ratings and playcounts into your RhythmBox library.<br>
+</p>
+
+<h4>Prerequesites:<br>
+</h4>
+
+<ul>
+
+  <li>Rhythmbox</li>
+  <li>Python<br>
+  </li>
+  <li>libxml2<br>
+  </li>
+  <li>python-libxml2 (Python bindings for libxml2)</li>
+</ul>
+
+<div style="margin-left: 40px;">If you are running a desktop
+distribution of linux, you probably
+already have these installed.</div>
+
+<h4>Execution:</h4>
+
+<p>
+</p>
+
+<ol>
+
+  <li>Download the follwoing 3 files and put theme somewhere:</li>
+  <ul>
+    <li><a href="dumpitunes.py">dumpitunes.py</a></li>
+    <li><a href="dumprhythm.py">dumprhythm.py</a></li>
+    <li><a href="iTunesToRhythm.py">iTunesToRhythm.py</a></li>
+  </ul>
+  <li>Move/copy/mount all your music where RhythmBox can find them (the
+folder structure doesn't matter)<br>
+  </li>
+  <li>Copy or mount your "iTunes Music Library.xml" file to linux<br>
+  </li>
+  <li>Execute the following command: <command>python iTunesToRhythm.py
+-w -d ITunes\ Music\ Library.xml ~/.local/share/rhythmbox/rhythmdb.xml</command>
+    <br>
+  </li>
+  <li>Manually resolve any ambiguities your are prompted for</li>
+  <li>Enjoy your music<br>
+  </li>
+</ol>
+
+<code></code><code></code>
+<h4>Usage:<br>
+</h4>
+
+<code>Usage: iTunesToRhythm [options] &lt;path to
+ItunesMusicLibrary.xml&gt;
+&lt;path to rhythmdb.xml&gt;<br>
+<br>
+Options:<br>
+&nbsp; -h, --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+show this help message and exit<br>
+&nbsp; -c, --confirm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; confirm every
+match<br>
+&nbsp; -w, --writechanges&nbsp; write changes to destination file<br>
+&nbsp; -d, --disambiguate&nbsp; prompt user to resolve ambiguities<br>
+&nbsp; -l, --fastandloose&nbsp; ignore differences in files name when a
+file size match<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+is made against&nbsp; a single song.&nbsp;&nbsp; Will not resolve<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+multiple matches<br>
+</code>
+<br>
+
+<br>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-2377136359999276";
+/* 728x90, created 2/21/09 */
+google_ad_slot = "4415893889";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+<br>
+
+<br>
+</body></html>
