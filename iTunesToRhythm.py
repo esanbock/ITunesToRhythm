@@ -20,23 +20,31 @@ import libxml2
 from optparse import OptionParser,  OptionGroup
 from dumprhythm import RhythmLibraryParser, RhythmSong
 from dumpitunes import iTunesLibraryParser, iTunesSong
-
+from dumpamarok import AmarokLibraryParser,  AmarokSong
 
 def main(argv):
 	# process command line
 	options, args = processCommandLine(argv)
 	print "Reading iTunes database from " + args[0]
-	print "Using RhythmBox database " + args[1]
-
-	#open the libraries
-	rhythmParser = RhythmLibraryParser(args[1]);
+	
+	if len(args) == 2:
+		print "Using RhythmBox database " + args[1]
+		destinationParser = RhythmLibraryParser(args[1]);
+	
+	else:
+		print "Using amarok database"
+		destinationParser = AmarokLibraryParser(options.servername, options.database, options.username,  options.password   )
+		
+	#open ituens linbrary
 	itunesParser = iTunesLibraryParser(args[0]);
-	allRhythmSongs = rhythmParser.getSongs()
+	
+	#retrieve destination songs
+	allRhythmSongs = destinationParser.getSongs()
 	
 	# go through each song in rhythmbox
 	correlator = SongCorrelator(itunesParser)
 	for song in allRhythmSongs:
-		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
+		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
 		# find equivalent itunes song
 		match = correlator.correlateSong( song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate )
 		# update database, if match

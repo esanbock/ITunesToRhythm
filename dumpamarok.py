@@ -21,8 +21,8 @@ class AmarokSong(BaseSong):
 		self.db = database
 		self.id = int(row[0])
 		self.artist =row[1]
-		self.album = row[2]
-		self.title = row[3]
+		self.title  = row[2]
+		self.album= row[3]
 		self.size = row[4]
 		self.filePath = row[5]
 	
