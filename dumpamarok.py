@@ -63,10 +63,12 @@ class AmarokLibraryParser( BaseLibraryParser ):
 		allSongs = []
 		for row in results:
 				amarokSong = AmarokSong(self.db,  row)
-				amarokSong.setRating(57)
 				allSongs.append( amarokSong )
 		
 		return allSongs
+		
+	def save(self, location): 
+		db.Commit()
 		
 if __name__ == "__main__":
         main(sys.argv)

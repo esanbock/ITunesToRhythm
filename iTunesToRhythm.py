@@ -39,20 +39,22 @@ def main(argv):
 	itunesParser = iTunesLibraryParser(args[0]);
 	
 	#retrieve destination songs
-	allRhythmSongs = destinationParser.getSongs()
+	allDestinationSongs = destinationParser.getSongs()
 	
 	# go through each song in rhythmbox
 	correlator = SongCorrelator(itunesParser)
-	for song in allRhythmSongs:
+	for song in allDestinationSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
 		# find equivalent itunes song
 		match = correlator.correlateSong( song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate )
 		# update database, if match
 		if match != None and options.writeChanges == True:
-			song.setRating( match.rating  )
-			print "\t\t\tRating changed to " + str( match.rating / 20 )
-			song.setPlaycount( match.playcount )
-			print "\t\t\Play count changed to " + str( match.playcount )
+			if options.noratings == False:
+				song.setRating( match.rating  )
+				print "\t\t\tRating changed to " + str( match.rating / 20 )
+			if options.noplaycounts == False:
+				song.setPlaycount( match.playcount )
+				print "\t\t\Play count changed to " + str( match.playcount )
 
 	# dump summary results
 	print "\nSummary\n------------------------------------"
@@ -64,7 +66,7 @@ def main(argv):
 
 	# save
 	if options.writeChanges == True:
-		rhythmParser.save( args[1] )
+		destinationParser.save( args[1] )
 		print "Changes were written to " + args[1]
 	else:
 		print "Changes were not written to " + args[1] + "\n\tuse -w to actually write changes to disk" 
@@ -75,6 +77,8 @@ def processCommandLine( argv ):
 	parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
 	parser.add_option("-a", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )
 	parser.add_option("-l",  "--fastandloose", action="store_true", dest= "fastAndLoose",  default = False,  help = "ignore differences in files name when a file size match is made against  a single song.   Will not resolve multiple matches" )
+	parser.add_option("--noplaycounts", action="store_true", dest= "noplaycounts",  default = False,  help = "do not update play counts" )
+	parser.add_option("--noratings", action="store_true", dest= "noratings",  default = False,  help = "do not update ratings" )
 	
 	amarokGroup = OptionGroup(parser,  "Amarok options",  "Options for connecting to an Amarok MySQL remote database")
 	amarokGroup.add_option("-s",  "--server",  dest="servername",  help = "host name of the MySQL database server")
