@@ -17,8 +17,9 @@ def main(argv):
 
 
 class AmarokSong(BaseSong):
-	def __init__(self, row):
-		self.id = row[0]
+	def __init__(self, database,  row):
+		self.db = database
+		self.id = int(row[0])
 		self.artist =row[1]
 		self.album = row[2]
 		self.title = row[3]
@@ -26,7 +27,22 @@ class AmarokSong(BaseSong):
 		self.filePath = row[5]
 	
 	def setRating( self, rating ):
-		print "not implemented"
+		cursor = self.db.cursor()
+		cursor.execute("select statistics.id from statistics inner join urls on urls.id = statistics.url inner join tracks on tracks.url = urls.id " + \
+		               "where tracks.id=%d" % (self.id ) )
+		result = cursor.fetchone()
+		if result == 	None:
+			# run an insert
+			cursor.execute("insert into statistics(rating) values (%d)" %  (rating))
+			db.commit()
+		elif len(result) == 1:
+		   # run an update
+		   statid = result[0][0]
+		   cursor.execute("update statistics set rating = %d where id = %d " %  (rating,  statid))
+		   db.commit()
+		else:
+			# extreme error
+			throw( "database error" )
 
 	def setPlaycount( self, playcount ):
 		print "not implemented"
@@ -47,7 +63,7 @@ class AmarokLibraryParser( BaseLibraryParser ):
 		
 		allSongs = []
 		for row in results:
-				amarokSong = AmarokSong(row)
+				amarokSong = AmarokSong(self.db,  row)
 				allSongs.append( amarokSong )
 		
 		return allSongs

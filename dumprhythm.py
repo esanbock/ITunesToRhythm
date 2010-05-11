@@ -32,10 +32,10 @@ class RhythmSong(BaseSong):
 		ratingNode = self.xmlNode.xpathEval("rating")
 	        if len(ratingNode) == 0:
 			newNode = libxml2.newNode("rating")
-          		newNode.setContent(str(rating))
+          		newNode.setContent(str(rating / 20))
             		self.xmlNode.addChild(newNode)
         	else:    
-            		ratingNode[0].setContent( str(rating) )
+            		ratingNode[0].setContent( str(rating / 20) )
 
 	def setPlaycount( self, playcount ):
 		playcountNode = self.xmlNode.xpathEval("play-count")
