@@ -28,6 +28,7 @@ class BaseSong:
 
 class BaseLibraryParser:
 	def __init__(self, location):
+		self.location = location
 		self.doc = libxml2.parseFile( location )
 		self.xpathContext = self.doc.xpathNewContext()
 		return
@@ -35,5 +36,5 @@ class BaseLibraryParser:
 	def getSongs(self):
 		return
 	
-	def save(self, location): 
-		self.doc.saveFile( location )
+	def save(self): 
+		self.doc.saveFile( self.location )

@@ -25,17 +25,20 @@ class AmarokSong(BaseSong):
 		self.album= row[3]
 		self.size = row[4]
 		self.filePath = row[5]
-	
-	def setRating( self, rating ):
+
+	def getStatUrlId( self):
 		cursor = self.db.cursor()
 		cursor.execute("select statistics.id as statid, urls.id as urlid from urls " +
 									"inner join tracks on tracks.url = urls.id " +
 									"left outer join statistics on urls.id = statistics.url " +
 									"where tracks.id=%d" % (self.id ) )
 		result = cursor.fetchone()
-		statid = result[0]
-		urlid = result[1]
-
+		return result[0],result[1]
+		
+	
+	def setRating( self, rating ):
+		statid, urlid = self.getStatUrlId()
+		cursor = self.db.cursor()
 		if  statid != None:
 			# run an update
 			cursor.execute("update statistics set rating = %d where id = %d " %  (rating,  statid))
@@ -44,7 +47,16 @@ class AmarokSong(BaseSong):
 			cursor.execute("insert into statistics (url,rating) values (%d,%d)" % (urlid,  rating))
 	   
 	def setPlaycount( self, playcount ):
-		print "not implemented"
+		statid, urlid = self.getStatUrlId()
+		cursor = self.db.cursor()
+		if  statid != None:
+			# run an update
+			cursor.execute("update statistics set playcount = %d where id = %d " %  (playcount,  statid))
+		else:
+			# run an insert
+			cursor.execute("insert into statistics (url,playcount) values (%d,%d)" % (urlid,  playcount))
+
+		
 
 class AmarokLibraryParser( BaseLibraryParser ):
 	def __init__(self, server,  database,  username,  pwd):
@@ -67,8 +79,8 @@ class AmarokLibraryParser( BaseLibraryParser ):
 		
 		return allSongs
 		
-	def save(self, location): 
-		db.Commit()
+	def save(self): 
+		self.db.commit()
 		
 if __name__ == "__main__":
         main(sys.argv)

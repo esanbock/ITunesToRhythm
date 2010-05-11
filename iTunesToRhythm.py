@@ -41,7 +41,7 @@ def main(argv):
 	#retrieve destination songs
 	allDestinationSongs = destinationParser.getSongs()
 	
-	# go through each song in rhythmbox
+	# go through each song in destination library
 	correlator = SongCorrelator(itunesParser)
 	for song in allDestinationSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
@@ -54,7 +54,7 @@ def main(argv):
 				print "\t\t\tRating changed to " + str( match.rating / 20 )
 			if options.noplaycounts == False:
 				song.setPlaycount( match.playcount )
-				print "\t\t\Play count changed to " + str( match.playcount )
+				print "\t\t\tPlay count changed to " + str( match.playcount )
 
 	# dump summary results
 	print "\nSummary\n------------------------------------"
@@ -66,10 +66,10 @@ def main(argv):
 
 	# save
 	if options.writeChanges == True:
-		destinationParser.save( args[1] )
-		print "Changes were written to " + args[1]
+		destinationParser.save()
+		print "Changes were written to destination"
 	else:
-		print "Changes were not written to " + args[1] + "\n\tuse -w to actually write changes to disk" 
+		print "Changes were not written to destination \n\tuse -w to actually write changes to disk" 
 
 def processCommandLine( argv ):
 	parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>")
