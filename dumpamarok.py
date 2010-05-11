@@ -4,11 +4,10 @@ from songparser import BaseSong, BaseLibraryParser
 
 
 def main(argv):
-	location = argv[1]
-	server = "anubis"
-	database = "amarok"
-	username = "amarok"
-	pwd = "amarok"
+	server =argv[1]
+	database = argv[2]
+	username = argv[3]
+	pwd = argv[4]
 	
 	print "Reading database from " + username + "@" + server + "/" + database
 	parser = AmarokLibraryParser( server,  database,  username,  pwd );
@@ -19,12 +18,12 @@ def main(argv):
 
 class AmarokSong(BaseSong):
 	def __init__(self, row):
-		
-		self.artist =row[0]
-		self.album = row[1]
-		self.title = row[2]
-		self.size = row[3]
-		self.filePath = row[4]
+		self.id = row[0]
+		self.artist =row[1]
+		self.album = row[2]
+		self.title = row[3]
+		self.size = row[4]
+		self.filePath = row[5]
 	
 	def setRating( self, rating ):
 		print "not implemented"
@@ -39,7 +38,7 @@ class AmarokLibraryParser( BaseLibraryParser ):
 	
 	def getSongs(self):
 		cursor = self.db.cursor()
-		query = cursor.execute( "select artists.name, tracks.title, albums.name, tracks.filesize, urls.rpath from tracks " +
+		query = cursor.execute( "select tracks.id, artists.name, tracks.title, albums.name, tracks.filesize, urls.rpath from tracks " +
 		                       "inner join artists on artists.id = tracks.artist " + 
 							  "inner join albums on albums.id = tracks.album " +
 							 "inner join urls on urls.id = tracks.url " )
