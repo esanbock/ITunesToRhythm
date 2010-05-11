@@ -17,7 +17,7 @@
 
 import sys
 import libxml2
-from optparse import OptionParser
+from optparse import OptionParser,  OptionGroup
 from dumprhythm import RhythmLibraryParser, RhythmSong
 from dumpitunes import iTunesLibraryParser, iTunesSong
 
@@ -62,19 +62,30 @@ def main(argv):
 		print "Changes were not written to " + args[1] + "\n\tuse -w to actually write changes to disk" 
 
 def processCommandLine( argv ):
-    parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>")
-    parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match" )
-    parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
-    parser.add_option("-d", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )
-    parser.add_option("-l",  "--fastandloose", action="store_true", dest= "fastAndLoose",  default = False,  help = "ignore differences in files name when a file size match is made against  a single song.   Will not resolve multiple matches" )
-    # parse options
-    options, args = parser.parse_args()
+	parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>")
+	parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match" )
+	parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
+	parser.add_option("-a", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )
+	parser.add_option("-l",  "--fastandloose", action="store_true", dest= "fastAndLoose",  default = False,  help = "ignore differences in files name when a file size match is made against  a single song.   Will not resolve multiple matches" )
+	
+	amarokGroup = OptionGroup(parser,  "Amarok options",  "Options for connecting to an Amarok MySQL remote database")
+	amarokGroup.add_option("-s",  "--server",  dest="servername",  help = "host name of the MySQL database server")
+	amarokGroup.add_option("-d",  "--database",  dest="database",  help = "database name of the amarok database")
+	amarokGroup.add_option("-u",  "--username",  dest="username",  help = "login name of the amarok database")
+	amarokGroup.add_option("-p",  "--password",  dest="password",  help = "password of the user")
+	
+	parser.add_option_group(amarokGroup)
+	# parse options
+	options, args = parser.parse_args()
 
-    # check that files are specified
-    if len(args) != 2:
-	parser.print_help()
-        parser.error( "you must supply 2 file names" )
-    return options, args
+	# check that files are specified
+	if len(args) != 2:
+		if options.servername is None:
+			parser.print_help()
+			parser.error( "you must supply 2 file names or 1 file name and database connection information" )
+	
+	# we're ok
+	return options, args
 
 class SongCorrelator:
 	def __init__(self, parser ):
