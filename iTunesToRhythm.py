@@ -51,7 +51,7 @@ def main(argv):
 		if match != None and options.writeChanges == True:
 			if options.noratings == False:
 				song.setRating( match.rating  )
-				print "\t\t\tRating changed to " + str( match.rating / 20 )
+				print "\t\t\tRating changed to " + str( match.rating )
 			if options.noplaycounts == False:
 				song.setPlaycount( match.playcount )
 				print "\t\t\tPlay count changed to " + str( match.playcount )
@@ -72,7 +72,7 @@ def main(argv):
 		print "Changes were not written to destination \n\tuse -w to actually write changes to disk" 
 
 def processCommandLine( argv ):
-	parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <path to rhythmdb.xml>")
+	parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <<path to rhythmdb.xml> | <datbase connection information>>")
 	parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match" )
 	parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
 	parser.add_option("-a", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )

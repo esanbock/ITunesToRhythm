@@ -41,10 +41,10 @@ class AmarokSong(BaseSong):
 		cursor = self.db.cursor()
 		if  statid != None:
 			# run an update
-			cursor.execute("update statistics set rating = %d where id = %d " %  (rating,  statid))
+			cursor.execute("update statistics set rating = %d where id = %d " %  (rating / 10,  statid))
 		else:
 			# run an insert
-			cursor.execute("insert into statistics (url,rating) values (%d,%d)" % (urlid,  rating))
+			cursor.execute("insert into statistics (url,rating) values (%d,%d)" % (urlid,  rating / 10))
 	   
 	def setPlaycount( self, playcount ):
 		statid, urlid = self.getStatUrlId()
