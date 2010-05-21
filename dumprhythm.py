@@ -27,6 +27,19 @@ class RhythmSong(BaseSong):
 		self.title = self.xmlNode.xpathEval("title")[0].content
 		self.size = self.xmlNode.xpathEval("file-size")[0].content
 		self.filePath = self.xmlNode.xpathEval("location")[0].content
+		self.playcount = self.xmlNode.xpathEval("play-count")
+		self.rating = self.xmlNode.xpathEval("rating")
+		
+		if len(self.playcount) == 0:
+			self.playcount = 0
+		else:
+			self.playcount = int(self.playcount[0].content)
+			
+		if len(self.rating) == 0:
+			self.rating = 0
+		else:
+			self.rating = int(self.rating[0].content) * 20
+
 	
 	def setRating( self, rating ):
 		ratingNode = self.xmlNode.xpathEval("rating")
@@ -62,6 +75,13 @@ class RhythmLibraryParser( BaseLibraryParser ):
 		        rhythmsong = RhythmSong( songNode )
 			allSongs.append( rhythmsong )
 		return allSongs
-	
+	def findSongBySize( self, size ):
+		matches = self.xpathContext.xpathEval("//entry[@type='song' and file-size = '" + str(size)  + "']")
+		matchingsongs = []
+		for match in matches:
+			song = RhythmSong( match )
+			matchingsongs.append( song )
+		return matchingsongs
+
 if __name__ == "__main__":
 	main(sys.argv)

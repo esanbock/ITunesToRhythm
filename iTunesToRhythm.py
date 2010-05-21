@@ -17,6 +17,7 @@
 
 import sys
 import libxml2
+import linecache
 from optparse import OptionParser,  OptionGroup
 from dumprhythm import RhythmLibraryParser, RhythmSong
 from dumpitunes import iTunesLibraryParser, iTunesSong
@@ -25,24 +26,16 @@ from dumpamarok import AmarokLibraryParser,  AmarokSong
 def main(argv):
 	# process command line
 	options, args = processCommandLine(argv)
-	print "Reading iTunes database from " + args[0]
-	
-	if len(args) == 2:
-		print "Using RhythmBox database " + args[1]
-		destinationParser = RhythmLibraryParser(args[1]);
-	
-	else:
-		print "Using amarok database"
-		destinationParser = AmarokLibraryParser(options.servername, options.database, options.username,  options.password   )
-		
-	#open ituens linbrary
-	itunesParser = iTunesLibraryParser(args[0]);
+	print "Reading input from " + args[0]
+	inputParser = getParser(args[0], options  )
+	print "Writing to output " + args[1]
+	destinationParser = getParser(args[1], options  )
 	
 	#retrieve destination songs
 	allDestinationSongs = destinationParser.getSongs()
 	
 	# go through each song in destination library
-	correlator = SongCorrelator(itunesParser)
+	correlator = SongCorrelator(inputParser)
 	for song in allDestinationSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
 		# find equivalent itunes song
@@ -71,8 +64,22 @@ def main(argv):
 	else:
 		print "Changes were not written to destination \n\tuse -w to actually write changes to disk" 
 
+def getParser(  file,  options ):
+	if file == "mysql":
+		print "Using amarok database"
+		return AmarokLibraryParser(options.servername, options.database, options.username,  options.password   )
+	
+	desc = linecache.getline( file,  2)
+	if desc.find("Apple Computer") != -1:
+		#open itunes linbrary
+		print "\tusing Itunes music library"
+		return iTunesLibraryParser(file);
+	if desc.find("rhythmdb") != -1:
+		print "\tusing Rhythm box library"
+		return RhythmLibraryParser(file)
+
 def processCommandLine( argv ):
-	parser = OptionParser("iTunesToRhythm [options] <path to ItunesMusicLibrary.xml> <<path to rhythmdb.xml> | <datbase connection information>>")
+	parser = OptionParser("iTunesToRhythm [options] <inputfile>|mysql <outputfile>|mysql")
 	parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match" )
 	parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
 	parser.add_option("-a", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )
@@ -92,9 +99,8 @@ def processCommandLine( argv ):
 
 	# check that files are specified
 	if len(args) != 2:
-		if options.servername is None:
 			parser.print_help()
-			parser.error( "you must supply 2 file names or 1 file name and database connection information" )
+			parser.error( "you must supply 2 file names or 1 file name and the word mysql followed by database information" )
 	
 	# we're ok
 	return options, args
