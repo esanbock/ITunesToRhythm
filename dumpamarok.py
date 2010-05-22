@@ -25,6 +25,14 @@ class AmarokSong(BaseSong):
 		self.album= row[3]
 		self.size = row[4]
 		self.filePath = row[5]
+		self.playcount = row[6]
+		if self.playcount == None:
+			self.playcount = 0
+		
+		if row[7] == None:
+			self.rating = 0
+		else:
+			self.rating = row[7] * 10
 
 	def getStatUrlId( self):
 		cursor = self.db.cursor()
@@ -60,23 +68,26 @@ class AmarokSong(BaseSong):
 
 class AmarokLibraryParser( BaseLibraryParser ):
 	def __init__(self, server,  database,  username,  pwd):
-		
 		self.db = MySQLdb.connect( host=server, db=database, user=username, passwd=pwd)
+		self.querystring = "select tracks.id, artists.name, tracks.title, albums.name, tracks.filesize, urls.rpath, statistics.playcount, statistics.rating from tracks inner join artists on artists.id = tracks.artist inner join albums on albums.id = tracks.album inner join urls on urls.id = tracks.url left outer join statistics on urls.id = statistics.url  "
 	
 	def getSongs(self):
 		cursor = self.db.cursor()
-		query = cursor.execute( "select tracks.id, artists.name, tracks.title, albums.name, tracks.filesize, urls.rpath from tracks " +
-		                       "inner join artists on artists.id = tracks.artist " + 
-							  "inner join albums on albums.id = tracks.album " +
-							 "inner join urls on urls.id = tracks.url " )
-		
+		query = cursor.execute( self.querystring )
 		results = cursor.fetchall()
-		
+		return self.rowsToSongs( results )
+	
+	def findSongBySize(self,  size):
+		cursor = self.db.cursor()
+		query = cursor.execute( self.querystring + " where tracks.filesize = " + size )
+		results = cursor.fetchall()
+		return self.rowsToSongs( results )
+
+	def rowsToSongs(self,  results):
 		allSongs = []
 		for row in results:
 				amarokSong = AmarokSong(self.db,  row)
 				allSongs.append( amarokSong )
-		
 		return allSongs
 		
 	def save(self): 

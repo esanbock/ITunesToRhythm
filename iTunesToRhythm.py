@@ -66,7 +66,7 @@ def main(argv):
 
 def getParser(  file,  options ):
 	if file == "mysql":
-		print "Using amarok database"
+		print "\tusing amarok database"
 		return AmarokLibraryParser(options.servername, options.database, options.username,  options.password   )
 	
 	desc = linecache.getline( file,  2)
@@ -101,7 +101,11 @@ def processCommandLine( argv ):
 	if len(args) != 2:
 			parser.print_help()
 			parser.error( "you must supply 2 file names or 1 file name and the word mysql followed by database information" )
-	
+			
+	# make surce source & destination are not the same
+	if args[0] == args[1]:
+		parser.error("source and destination cannot be the same")
+		
 	# we're ok
 	return options, args
 
