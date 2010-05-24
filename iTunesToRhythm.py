@@ -66,16 +66,16 @@ def main(argv):
 
 def getParser(  file,  options ):
 	if file == "mysql":
-		print "\tusing amarok database"
+		print "\tassuming amarok database"
 		return AmarokLibraryParser(options.servername, options.database, options.username,  options.password   )
 	
 	desc = linecache.getline( file,  2)
 	if desc.find("Apple Computer") != -1:
 		#open itunes linbrary
-		print "\tusing Itunes music library"
+		print "\tdetected Itunes library"
 		return iTunesLibraryParser(file);
 	if desc.find("rhythmdb") != -1:
-		print "\tusing Rhythm box library"
+		print "\tdetected Rhythm box library"
 		return RhythmLibraryParser(file)
 
 def processCommandLine( argv ):
