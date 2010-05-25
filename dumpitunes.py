@@ -63,7 +63,7 @@ class iTunesSong( BaseSong ):
 			ratingValueNode = libxml2.newNode("integer")
 			newRatingKeyNode.addSibling(  ratingValueNode )
 			self.xmlNode.addChild(newRatingKeyNode)
-			ratingValueNode.addElement()
+			ratingValueNode.addChild(libxml2.newNode(str(rating)))
 		ratingValueNode[0].setContent(str(rating ))
 
 def main(argv):

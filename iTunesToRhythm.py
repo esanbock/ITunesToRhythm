@@ -38,16 +38,17 @@ def main(argv):
 	correlator = SongCorrelator(inputParser)
 	for song in allDestinationSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
-		# find equivalent itunes song
-		match = correlator.correlateSong( song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate )
-		# update database, if match
-		if match != None and options.writeChanges == True:
-			if options.noratings == False:
-				song.setRating( match.rating  )
-				print "\t\t\tRating changed to " + str( match.rating )
-			if options.noplaycounts == False:
-				song.setPlaycount( match.playcount )
-				print "\t\t\tPlay count changed to " + str( match.playcount )
+		if song.size != None and song.size != "Unknown":
+			# find equivalent itunes song
+			match = correlator.correlateSong( song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate )
+			# update database, if match
+			if match != None and options.writeChanges == True:
+				if options.noratings == False:
+					song.setRating( match.rating  )
+					print "\t\t\tRating changed to " + str( match.rating )
+				if options.noplaycounts == False:
+					song.setPlaycount( match.playcount )
+					print "\t\t\tPlay count changed to " + str( match.playcount )
 
 	# dump summary results
 	print "\nSummary\n------------------------------------"
