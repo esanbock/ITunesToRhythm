@@ -59,7 +59,7 @@ class iTunesSong( BaseSong ):
 		ratingValueNodes = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Rating'][1]")
 		if len( ratingValueNodes ) == 0:
 			newRatingKeyNode= libxml2.newNode("key")
-			newRatingKeyNode.setContent("rating")
+			newRatingKeyNode.setContent("Rating")
 			ratingValueNode = libxml2.newNode("integer")
 			newRatingKeyNode.addSibling(  ratingValueNode )
 			self.xmlNode.addChild(newRatingKeyNode)
