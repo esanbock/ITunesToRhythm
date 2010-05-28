@@ -16,7 +16,11 @@
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
-sys.path.append('/sw/lib/python2.5/site-packages/')
+import platform
+
+if platform.system() == "Darwin":
+	sys.path.append('/sw/lib/python2.5/site-packages/')
+	from dumpitunesmac import iTunesMacParser, iTunesMacSong
 
 import libxml2
 import linecache
@@ -24,7 +28,6 @@ from optparse import OptionParser,  OptionGroup
 from dumprhythm import RhythmLibraryParser, RhythmSong
 from dumpitunes import iTunesLibraryParser, iTunesSong
 from dumpamarok import AmarokLibraryParser,  AmarokSong
-from dumpitunesmac import iTunesMacParser, iTunesMacSong
 
 def main(argv):
 	# process command line

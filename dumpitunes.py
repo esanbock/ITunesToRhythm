@@ -81,7 +81,6 @@ class iTunesSong( BaseSong ):
 		
 		playcountValueNode.setContent(str(playcount))
 
-
 def main(argv):
 	location = argv[1]
 	print "Reading iTunes library from " + location

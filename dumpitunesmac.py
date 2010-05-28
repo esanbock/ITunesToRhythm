@@ -7,7 +7,9 @@
 #  Copyright (c) 2010 __MyCompanyName__. All rights reserved.
 #
 import sys
-sys.path.append('/sw/lib/python2.5/site-packages/')
+import platform
+if platform.system() == "Darwin":
+	sys.path.append('/sw/lib/python2.5/site-packages/')
 from appscript import *
 from songparser import BaseSong, BaseLibraryParser
 	
