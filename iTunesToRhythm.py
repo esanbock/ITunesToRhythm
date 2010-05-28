@@ -16,6 +16,8 @@
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
+sys.path.append('/sw/lib/python2.5/site-packages/')
+
 import libxml2
 import linecache
 from optparse import OptionParser,  OptionGroup

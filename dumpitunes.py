@@ -59,16 +59,27 @@ class iTunesSong( BaseSong ):
 		ratingValueNodes = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Rating'][1]")
 		if len( ratingValueNodes ) == 0:
 			newRatingKeyNode= libxml2.newNode("key")
+			self.xmlNode.addChild(newRatingKeyNode)
 			newRatingKeyNode.setContent("Rating")
 			ratingValueNode = libxml2.newNode("integer")
 			newRatingKeyNode.addSibling(  ratingValueNode )
-			self.xmlNode.addChild(newRatingKeyNode)
-		elif len(ratingValueNodes) > 1:
-			raise "unpossible"
 		else:
 			ratingValueNode = ratingValueNodes[0]
 		
-		ratingValueNode.setContent(str(rating ))
+		ratingValueNode.setContent(str(rating))
+		
+	def setPlaycount( self, playcount ):
+		playcountValueNodes = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Play Count'][1]")
+		if len( playcountValueNodes ) == 0:
+			newPlaycountKeyNode= libxml2.newNode("key")
+			self.xmlNode.addChild(newPlaycountKeyNode)
+			newPlaycountKeyNode.setContent("Play Count")
+			playcountValueNode = libxml2.newNode("integer")
+			newPlaycountKeyNode.addSibling(  playcountValueNode )
+		else:
+			playcountValueNode = playcountValueNodes[0]
+		
+		playcountValueNode.setContent(str(playcount))
 
 
 def main(argv):
