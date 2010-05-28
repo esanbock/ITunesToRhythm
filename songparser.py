@@ -32,9 +32,20 @@ class BaseLibraryParser:
 		self.doc = libxml2.parseFile( location )
 		self.xpathContext = self.doc.xpathNewContext()
 		return
-		
+	
+	#@abstractmethod
 	def getSongs(self):
+		raise( "must override" )
 		return
 	
+	#@abstractmethod
+	def findSongBySize( self, size ):
+		results = []
+		allSongs = self.getSongs()
+		for song in allSongs:
+			if song.size == size:
+				results.append( song )
+		
+	#@abstractmethod
 	def save(self): 
 		self.doc.saveFile( self.location )

@@ -24,6 +24,7 @@ from optparse import OptionParser,  OptionGroup
 from dumprhythm import RhythmLibraryParser, RhythmSong
 from dumpitunes import iTunesLibraryParser, iTunesSong
 from dumpamarok import AmarokLibraryParser,  AmarokSong
+from dumpitunesmac import iTunesMacParser, iTunesMacSong
 
 def main(argv):
 	# process command line
@@ -71,6 +72,9 @@ def getParser(  file,  options ):
 	if file == "mysql":
 		print "\tassuming amarok database"
 		return AmarokLibraryParser(options.servername, options.database, options.username,  options.password   )
+	if file == "itunes":
+		print "\tassuming itunes on the mac"
+		return iTunesMacParser()
 	
 	desc = linecache.getline( file,  2)
 	if desc.find("Apple Computer") != -1:
@@ -82,7 +86,7 @@ def getParser(  file,  options ):
 		return RhythmLibraryParser(file)
 
 def processCommandLine( argv ):
-	parser = OptionParser("iTunesToRhythm [options] <inputfile>|mysql <outputfile>|mysql")
+	parser = OptionParser("iTunesToRhythm [options] <inputfile>|mysql <outputfile>|mysql|itunes")
 	parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match" )
 	parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file" )
 	parser.add_option("-a", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities" )
