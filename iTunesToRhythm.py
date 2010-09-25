@@ -87,6 +87,8 @@ def getParser(file_,  options):
 	if desc.find("rhythmdb") != -1:
 		print "\tdetected Rhythm box library"
 		return RhythmLibraryParser(file_)
+		
+	raise Exception( "unrecognized file format")
 
 def processCommandLine(argv):
 	parser = OptionParser("iTunesToRhythm [options] <inputfile>|itunes|mysql <outputfile>|mysql|itunes")
