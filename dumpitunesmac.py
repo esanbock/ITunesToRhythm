@@ -35,7 +35,10 @@ class iTunesMacParser( BaseLibraryParser ):
 			self.iTunes = app('iTunes')
 			
 	def getSongs(self):
-		self.library = self.iTunes.library_playlists['Library']
+		return getPlaylistFiles('Library')
+		
+	def getPlaylistFiles( self, playlistName ):
+		self.library = self.iTunes.library_playlists[playlistName]
 		results=[]
 		allSongs = self.library.file_tracks()
 		for song in allSongs:
@@ -49,7 +52,13 @@ class iTunesMacParser( BaseLibraryParser ):
 def main( argv ):
 	print "Reading from iTunes running on Mac (appscript)"
 	parser = iTunesMacParser()
-	allSongs = parser.getSongs()
+	
+	if len(argv) == 2:
+		print "Using playlist " + argv[1]
+		allSongs = parser.getPlaylistFiles( argv[1] )
+	else:
+		allSongs = parser.getSongs()
+		
 	for song in allSongs:
 		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
 				
