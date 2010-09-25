@@ -35,7 +35,7 @@ class iTunesMacParser( BaseLibraryParser ):
 			self.iTunes = app('iTunes')
 			
 	def getSongs(self):
-		return getPlaylistFiles('Library')
+		return self.getPlaylistFiles('Library')
 		
 	def getPlaylistFiles( self, playlistName ):
 		self.library = self.iTunes.library_playlists[playlistName]
