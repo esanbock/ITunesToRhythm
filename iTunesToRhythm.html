@@ -33,7 +33,9 @@ command {
 <h1>iTunesToRhythm</h1>
 
 <p>This little piece of insanity is a tool that transfers your
-ratings and playcounts between various players (iTunes, RhythmBox, and Amarok).  <strong>  Supports two-way synchronization in iTunes Mac, RhythmBox, and Amarok </strong> <br>
+ratings and playcounts between various players (iTunes, RhythmBox, and
+Amarok). <strong> Supports two-way synchronization in iTunes Mac,
+RhythmBox, and Amarok </strong> <br>
 </p>
 
 <p><img style="width: 285px; height: 235px;" alt="" src="Supported%20direction.png"><br>
@@ -44,7 +46,8 @@ ratings and playcounts between various players (iTunes, RhythmBox, and Amarok). 
 
 <ul>
 
-  <li>Rhythmbox</li>
+  <li>Rhythmbox, Amarok, or iTunes<br>
+  </li>
   <li>Python<br>
   </li>
   <li>libxml2<br>
@@ -67,10 +70,15 @@ already have these installed.</div>
   <ul>
     <li><a href="iTunesToRhythm.tar.bz2">iTunesToRhythm.tar.bz2</a></li>
   </ul>
-  <li>Move/copy/mount all your music where RhythmBox can find them (the
+  <li>Move/copy/mount all your music where RhythmBox or Amarok can find
+them (the
 folder structure doesn't matter)<br>
   </li>
-  <li>Copy or mount your "iTunes Music Library.xml" file to linux<br>
+  <li>Import all your music into your new player (amarok or rhythmbox)<br>
+  </li>
+  <li>Copy or mount your "iTunes Music Library.xml" file to linux, if
+copying from itunes.&nbsp; If going to/from amarok or rhythm, ignore
+this step<br>
   </li>
   <li>Execute the following command: <command>iTunesToRhythm.py
 -w -a ITunes\ Music\ Library.xml ~/.local/share/rhythmbox/rhythmdb.xml</command>
@@ -79,20 +87,34 @@ folder structure doesn't matter)<br>
   <li>Manually resolve any ambiguities your are prompted for</li>
   <li>Enjoy your music<br>
   </li>
-<li>Note:  if using on a Mac, iTunes is directly supported by using "itunes" as the source or destination</li>
+  <li>Note: if running this tool on a Mac, iTunes is directly supported
+by using "itunes" as the source or destination.&nbsp; One could for
+instance, import from amarok directly into ituns on a Mac<br>
+  </li>
 </ol>
 
 <code></code><code></code>
 <h4>Examples:</h4>
-<p>Copy statistics from RhythmBox to an Amarok mysql database, excluding ratings:</p>
+
+<p>Copy statistics from RhythmBox to an Amarok mysql database,
+excluding ratings:</p>
+
 <command>iTunesToRhythm.py --noratings -a
 ~/.local/share/rhythmbox/rhythmdb.xml mysql -s musicserver -d amarok -u
-amarokuser -p verysecret</command>
+amarokuser -p verysecret<br>
+</command><br>
+
+Copy ratings and playcounts from Amarok to itunes on a Mac<br>
+
+<command>iTunesToRhythm.py mysql -s musicserver -d amarok -u
+amarokuser -p verysecret itunes</command>
+<br>
 
 <h4>Usage:<br>
 </h4>
 
-<code>Usage: iTunesToRhythm [options] &lt;inputfile&gt;|mysql|itunes &lt;outputfile&gt;|mysql|itunes<br>
+<code>Usage: iTunesToRhythm [options] &lt;inputfile&gt;|mysql|itunes
+&lt;outputfile&gt;|mysql|itunes<br>
 <br>
 Options:<br>
 &nbsp; -h, --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -103,25 +125,48 @@ match<br>
 &nbsp; -a, --disambiguate&nbsp; prompt user to resolve ambiguities<br>
 &nbsp; -l, --fastandloose&nbsp; ignore differences in file names when a
 file size match
-is made against a single song.  Will not resolve multiple matches<br>
+is made against a single song. Will not resolve multiple matches<br>
 &nbsp; --noplaycounts&nbsp; do not update play counts<br>
 &nbsp; --noratings&nbsp; do not update ratings<br>
 <br>
-    &nbsp; Amarok connection options:<br>
-    &nbsp;&nbsp; Options for connecting to an Amarok MySQL remote database
-    <br><br>
-    &nbsp;&nbsp; -s SERVERNAME, --server=SERVERNAME<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; host name of the MySQL database server <br>
-    &nbsp;&nbsp; -d DATABASE, --database=DATABASE<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; database name of the amarok database<br>
-    &nbsp;&nbsp; -u USERNAME, --username=USERNAME<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; login name of the amarok database<br>
-    &nbsp;&nbsp; -p PASSWORD, --password=PASSWORD<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password of the user<br>
-
+&nbsp; Amarok connection options:<br>
+&nbsp;&nbsp; Options for connecting to an Amarok MySQL remote database <br>
+<br>
+&nbsp;&nbsp; -s SERVERNAME, --server=SERVERNAME<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; host name of the MySQL database server <br>
+&nbsp;&nbsp; -d DATABASE, --database=DATABASE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; database name of the amarok database<br>
+&nbsp;&nbsp; -u USERNAME, --username=USERNAME<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; login name of the amarok database<br>
+&nbsp;&nbsp; -p PASSWORD, --password=PASSWORD<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password of the user<br>
 </code>
 <br>
-Speciifying "itunes" will attempt to use a running iTunes instance for synchronization (Mac Only)<br>
+
+Speciifying "itunes" will attempt to use a running iTunes instance for
+synchronization (Mac Only)<br>
+
+<br>
+
+<span style="font-weight: bold;">Roadmap:</span>
+
+
+<ol>
+
+  <li>Add support for Windows Media Player</li>
+  <li>Continuous synchronization between supported players (based on
+playcount)</li>
+  <li>Playlist synchronization<br>
+  </li>
+
+</ol>
+
+<span style="font-weight: bold;">Contact info:</span><br>
+
+<ul>
+
+  <li>Bug reports should be emailed to webmaster@esanbock.com</li>
+</ul>
 
 <br>
 
@@ -134,10 +179,7 @@ google_ad_height = 90;
 //-->
 </script>
 <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-
-<br>
+</script><br>
 
 <br>
 

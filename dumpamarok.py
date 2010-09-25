@@ -79,7 +79,7 @@ class AmarokLibraryParser( BaseLibraryParser ):
 	
 	def findSongBySize(self,  size):
 		cursor = self.db.cursor()
-		query = cursor.execute( self.querystring + " where tracks.filesize = " + size )
+		query = cursor.execute( self.querystring + " where tracks.filesize = " + str(size) )
 		results = cursor.fetchall()
 		return self.rowsToSongs( results )
 
