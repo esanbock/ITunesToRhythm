@@ -32,10 +32,14 @@ from dumpamarok import AmarokLibraryParser, AmarokSong
 def main(argv):
 	# process command line
 	options, args = processCommandLine(argv)
-	print "Reading input from " + args[0]
-	inputParser = getParser(args[0], options)
-	print "Writing to output " + args[1]
-	destinationParser = getParser(args[1], options)
+	try:
+		print "Reading input from " + args[0]
+		inputParser = getParser(args[0], options)
+		print "Writing to output " + args[1]
+		destinationParser = getParser(args[1], options)
+	except UnrecognizedFormatException as err:
+		print "\tFile format unrecognized.  Details - [" + err.value + "]"
+		return -1
 
 	#retrieve destination songs
 	allDestinationSongs = destinationParser.getSongs()
@@ -88,7 +92,7 @@ def getParser(file_,  options):
 		print "\tdetected Rhythm box library"
 		return RhythmLibraryParser(file_)
 		
-	raise Exception( "unrecognized file format")
+	raise UnrecognizedFormatException(desc)
 
 def processCommandLine(argv):
 	parser = OptionParser("iTunesToRhythm [options] <inputfile>|itunes|mysql <outputfile>|mysql|itunes")
@@ -218,6 +222,13 @@ class SongCorrelator(object):
             # int() failed
 			print "invalid input"
 			return self.inputNumber(msg, min_, max_)
+
+class UnrecognizedFormatException( Exception ):
+	def __init__(self, line):
+		self.value = line
+	def str(self):
+		return repr(self.value)		
+
 
 
 if __name__ == "__main__":
