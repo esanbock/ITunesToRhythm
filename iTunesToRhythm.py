@@ -25,9 +25,6 @@ if platform.system() == "Darwin":
 import libxml2
 import linecache
 from optparse import OptionParser,  OptionGroup
-from dumprhythm import RhythmLibraryParser, RhythmSong
-from dumpitunes import iTunesLibraryParser, iTunesSong
-from dumpamarok import AmarokLibraryParser, AmarokSong
 
 def main(argv):
 	# process command line
@@ -81,15 +78,18 @@ def getParser(file_,  options):
 		return AmarokLibraryParser(options.servername, options.database, options.username,  options.password)
 	if file_ == "itunes":
 		print "\tassuming itunes on the mac"
+		from dumpamarok import AmarokLibraryParser, AmarokSong
 		return iTunesMacParser()
 
 	desc = linecache.getline(file_,  2)
 	if desc.find("Apple Computer") != -1:
 		#open itunes linbrary
 		print "\tdetected Itunes library"
+		from dumpitunes import iTunesLibraryParser, iTunesSong
 		return iTunesLibraryParser(file_)
 	if desc.find("rhythmdb") != -1:
 		print "\tdetected Rhythm box library"
+		from dumprhythm import RhythmLibraryParser, RhythmSong
 		return RhythmLibraryParser(file_)
 		
 	raise UnrecognizedFormatException(desc)
