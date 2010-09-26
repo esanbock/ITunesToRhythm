@@ -37,7 +37,9 @@ def main(argv):
 	except UnrecognizedFormatException as err:
 		print "\tFile format unrecognized.  Details - [" + err.value + "]"
 		return -1
-
+	except IOError as badio:
+		print "\tUnable to open file. " + str(badio)
+		return -2
 	#retrieve destination songs
 	allDestinationSongs = destinationParser.getSongs()
 
@@ -82,6 +84,8 @@ def getParser(file_,  options):
 		return iTunesMacParser()
 
 	desc = linecache.getline(file_,  2)
+	if desc== '':
+		raise IOError("File not found")
 	if desc.find("Apple Computer") != -1:
 		#open itunes linbrary
 		print "\tdetected Itunes library"
