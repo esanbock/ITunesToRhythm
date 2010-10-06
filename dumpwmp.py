@@ -22,7 +22,7 @@ from songparser import BaseSong, BaseLibraryParser
 class WMPSong(BaseSong):
         def __init__(self, WMPSong):
                 self.wmpNode = WMPSong
-                self.artist = WMPSong.getItemInfo("Author")
+                self.artist = WMPSong.getItemInfo("WM/AlbumArtist")
                 self.album = WMPSong.getItemInfo("WM/AlbumTitle")
                 self.title = WMPSong.name
                 self.size = WMPSong.getItemInfo("FileSize")
@@ -43,10 +43,13 @@ class WMPParser(BaseLibraryParser):
         def getSongs(self):
                 songs = self.wmp.mediaCollection.getAll()
                 result = []
-                for s in songs:
-                        wmpSong = WMPSong(s)
-                        result.append(s)
-                        print wmpSong.filePath
+                try:
+                        for s in songs:
+                                wmpSong = WMPSong(s)
+                                result.append(s)
+                except:
+                        print "\t parsing stopped due to error " 
+
                 return result;
 
         def save(self):
