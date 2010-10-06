@@ -46,7 +46,7 @@ class WMPParser(BaseLibraryParser):
                 try:
                         for s in songs:
                                 wmpSong = WMPSong(s)
-                                result.append(s)
+                                result.append(wmpSong)
                 except:
                         print "\t parsing stopped due to error " 
 
