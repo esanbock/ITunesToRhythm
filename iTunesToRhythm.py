@@ -46,7 +46,10 @@ def main(argv):
 	# go through each song in destination library
 	correlator = SongCorrelator(inputParser)
 	for song in allDestinationSongs:
-		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
+                try: 
+                        print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
+                except UnicodeEncodeError as charError:
+                        print "*** UNICODE *** "
 		if song.size is not None and song.size != "Unknown":
 			# find equivalent itunes song
 			match = correlator.correlateSong(song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate)
