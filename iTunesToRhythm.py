@@ -82,6 +82,10 @@ def getParser(file_,  options):
 		print "\tassuming itunes on the mac"
 		from dumpamarok import AmarokLibraryParser, AmarokSong
 		return iTunesMacParser()
+	if file_ == "wmp":
+                print "\tassuming Windows Media Player"
+                from dumpwmp import WMPParser
+                return WMPParser();
 
 	desc = linecache.getline(file_,  2)
 	if desc== '':
