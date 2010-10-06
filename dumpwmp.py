@@ -34,7 +34,7 @@ class WMPSong(BaseSong):
                 self.wmpNode.setItemInfo("UserRating", rating)
 
         def setPlaycount(self, playcount):
-                self.wmpNode.setItemInfo("UserPlaycount", rating)
+                self.wmpNode.setItemInfo("UserPlaycount", playcount)
 
 class WMPParser(BaseLibraryParser):
         def __init__(self):
