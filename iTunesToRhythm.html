@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 
+
   
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>iTunesToRhythm</title>
   
@@ -42,17 +43,14 @@ command {
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
-</script>
-</head><body>
+</script></head><body>
 <h1>iTunesToRhythm</h1>
-
 <p>This little piece of insanity is a tool that transfers your
 ratings and playcounts between various players (iTunes, RhythmBox, and
-Amarok). <strong> Supports two-way synchronization in iTunes Mac,
-RhythmBox, and Amarok </strong> <br>
+Amarok).  Supports <strong>two-way</strong> synchronization in iTunes Mac,
+RhythmBox, Amarok, and Windows Media Player<br>
 </p>
-
-<p><img style="width: 285px; height: 235px;" alt="" src="Supported%20direction.png"><br>
+<p><img style="width: 525px; height: 298px;" alt="" src="Supported%20direction.png"><br>
 </p>
 
 <h4>Prerequesites:<br>
@@ -60,13 +58,19 @@ RhythmBox, and Amarok </strong> <br>
 
 <ul>
 
-  <li>Rhythmbox, Amarok, or iTunes<br>
+  <li>Rhythmbox, Amarok, Windows Media Player, or iTunes<br>
   </li>
   <li>Python<br>
   </li>
   <li>libxml2<br>
   </li>
   <li>python-libxml2 (Python bindings for libxml2)</li>
+  <li>MySQLdb python bindings (If using Amarok)<br>
+  </li>
+  <li>pywin32 (If using Windows Media Player)</li>
+  <li>appscript (If using iTunes on a Mac)<br>
+  </li>
+
 </ul>
 
 <div style="margin-left: 40px;">If you are running a desktop
@@ -196,5 +200,6 @@ google_ad_height = 90;
 </script><br>
 
 <br>
+
 
 </body></html>

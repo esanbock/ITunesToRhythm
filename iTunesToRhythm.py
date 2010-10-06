@@ -106,7 +106,7 @@ def getParser(file_,  options):
 	raise UnrecognizedFormatException(desc)
 
 def processCommandLine(argv):
-	parser = OptionParser("iTunesToRhythm [options] <inputfile>|itunes|mysql <outputfile>|mysql|itunes")
+	parser = OptionParser("iTunesToRhythm [options] <inputfile>|itunes|mysql|wmp <outputfile>|mysql|itunes|wmp")
 	parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default = False, help="confirm every match")
 	parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default = False, help="write changes to destination file")
 	parser.add_option("-a", "--disambiguate", action="store_true", dest="promptForDisambiguate", default = False, help="prompt user to resolve ambiguities")
@@ -127,7 +127,7 @@ def processCommandLine(argv):
 	# check that files are specified
 	if len(args) != 2:
 			parser.print_help()
-			parser.error("you must supply 2 file names or 1 file name and the word mysql followed by database information.  Specyfing itunes will use a running instance of iTunes on the Mac")
+			parser.error("you must supply a source and destination")
 
 	# make surce source & destination are not the same
 	if args[0] == args[1]:
