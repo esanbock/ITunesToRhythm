@@ -45,6 +45,7 @@ def main(argv):
 
 	# go through each song in destination library
 	correlator = SongCorrelator(inputParser)
+	inputModifications = 0
 	for song in allDestinationSongs:
                 try: 
                         print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
@@ -53,14 +54,27 @@ def main(argv):
 		if song.size is not None and song.size != "Unknown":
 			# find equivalent itunes song
 			match = correlator.correlateSong(song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate)
-			# update database, if match
-			if match is not None and options.writeChanges:
-				if not options.noratings:
-					song.setRating(match.rating)
-					print "\t\t\tRating changed to " + str(match.rating)
-				if not options.noplaycounts:
-					song.setPlaycount(match.playcount)
-					print "\t\t\tPlay count changed to " + str(match.playcount)
+			# calculate if two way
+			l = song
+			r = match
+			if r is not None and l is not None:
+				if options.twoway:  
+					if r.playcount > l.playcount:
+						r = song
+						l = match
+						print "\t\t\tModifying source"
+						inputModifications = inputModifications + 1
+					if r.playcount == l.playcount:
+						l = None
+						r = None
+				# update database, if match
+				if options.writeChanges:
+					if not options.noratings:
+						l.setRating(r.rating)
+						print "\t\t\tRating changed to " + str(r.rating)
+					if not options.noplaycounts:
+						l.setPlaycount(match.playcount)
+						print "\t\t\tPlay count changed to " + str(r.playcount)
 
 	# dump summary results
 	print "\nSummary\n------------------------------------"
@@ -69,11 +83,15 @@ def main(argv):
 	print "partial matches = " + str(correlator.partialMatches)
 	print "no matches = " + str(correlator.zeroMatches)
 	print "unresolved ambiguous matches = " + str(correlator.ambiguousMatches)
+	print "input modifications = " + str(inputModifications)	
 
 	# save
 	if options.writeChanges:
 		destinationParser.save()
 		print "Changes were written to destination"
+		if options.twoway:
+			inputParser.save()
+			print "Changes were written to source"
 	else:
 		print "Changes were not written to destination \n\tuse -w to actually write changes to disk"
 
@@ -113,6 +131,7 @@ def processCommandLine(argv):
 	parser.add_option("-l",  "--fastandloose", action="store_true", dest= "fastAndLoose",  default = False,  help = "ignore differences in files name when a file size match is made against  a single song.   Will not resolve multiple matches")
 	parser.add_option("--noplaycounts", action="store_true", dest= "noplaycounts",  default = False,  help = "do not update play counts")
 	parser.add_option("--noratings", action="store_true", dest= "noratings",  default = False,  help = "do not update ratings")
+	parser.add_option("--twoway", action="store_true", dest= "twoway",  default = False,  help = "sync up the two files, giving precedence to the items with the higher playcount")
 
 	amarokGroup = OptionGroup(parser,  "Amarok options",  "Options for connecting to an Amarok MySQL remote database")
 	amarokGroup.add_option("-s",  "--server",  dest="servername",  help = "host name of the MySQL database server")
