@@ -27,10 +27,16 @@ class WMPSong(BaseSong):
                 self.album = WMPSong.getItemInfo("WM/AlbumTitle")
                 self.title = WMPSong.name
                 self.size = WMPSong.getItemInfo("FileSize")
-                self.rating = WMPSong.getItemInfo("UserRating")
+                try:
+                        self.rating = int(WMPSong.getItemInfo("UserRating"))
+                except ValueError:
+                        print WMPSong.getItemInfo("UserRating")
+                        print "\t junk"
+                        self.rating = 0
                 self.playcount = WMPSong.getItemInfo("UserPlaycount")
                 self.filePath = WMPSong.sourceURL
 
+                
         def setRating(self, rating):
                 self.wmpNode.setItemInfo("UserRating", rating)
 
