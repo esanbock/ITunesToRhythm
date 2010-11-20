@@ -70,7 +70,7 @@ def main(argv):
 				# update database, if match
 				if options.writeChanges:
 					if not options.noratings:
-                                                if l.rating != r.rating:
+                                                if l.rating != r.rating & r.rating > 0:
                                                         l.setRating(r.rating)
                                                         print "\t\t\tRating changed to " + str(r.rating)
 					if not options.noplaycounts:
