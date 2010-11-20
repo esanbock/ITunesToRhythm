@@ -168,8 +168,8 @@ class SongCorrelator(object):
 	def correlateSong(self, song, confirm, fastAndLoose,  promptForDisambiguate):
 		match = None
 		matches = self.parser.findSongBySize(song.size)
-		matchcount = len(matches)
-
+                matchcount = len(matches)
+                    
 		# no results
 		if matchcount == 0:
 			print "\t no matches found"
@@ -184,13 +184,19 @@ class SongCorrelator(object):
 				if not fastAndLoose:
 					match = self.disambiguate(song, matches, promptForDisambiguate)
 				else:
-					print "\t 50% match on " + self.dumpMatch(match)
+                                        try:
+                                                print "\t 50% match on " + self.dumpMatch(match)
+                                        except UnicodeEncodeError:
+                                                print "\t 50% match on unprintable song"
 					self.partialMatches = self.partialMatches + 1
 		# multiple matches
 		else:
 			print "\t multiple matches"
 			for match in matches:
-				print "\t\t " + self.dumpMatch(match)
+                                try:
+                                        print "\t\t " + self.dumpMatch(match)
+                                except UnicodeEncodeError:
+                                        print "unprintable match"
 			# attempt a resolution
 			match = self.disambiguate(song, matches, promptForDisambiguate)
 

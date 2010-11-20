@@ -43,7 +43,8 @@ class BaseLibraryParser(object):
 		for song in allSongs:
 			if song.size == size:
 				results.append(song)
-
+                return results
+        
 	#@abstractmethod
 	def save(self):
 		self.doc.saveFile(self.location)
