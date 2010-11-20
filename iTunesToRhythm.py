@@ -70,11 +70,13 @@ def main(argv):
 				# update database, if match
 				if options.writeChanges:
 					if not options.noratings:
-						l.setRating(r.rating)
-						print "\t\t\tRating changed to " + str(r.rating)
+                                                if l.rating != r.rating:
+                                                        l.setRating(r.rating)
+                                                        print "\t\t\tRating changed to " + str(r.rating)
 					if not options.noplaycounts:
-						l.setPlaycount(match.playcount)
-						print "\t\t\tPlay count changed to " + str(r.playcount)
+                                                if l.playcount != r.playcount:
+                                                        l.setPlaycount(match.playcount)
+                                                        print "\t\t\tPlay count changed to " + str(r.playcount)
 
 	# dump summary results
 	print "\nSummary\n------------------------------------"
