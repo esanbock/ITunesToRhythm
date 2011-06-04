@@ -73,15 +73,16 @@ def main(argv):
 							print "\t\t\tModifying destination " + str(r.playcount) + " vs " + str(l.playcount)
 							outputModifications = outputModifications + 1
 				# update database, if match
-				if options.writeChanges:
-					if not options.noratings:
-						if l.rating != r.rating & r.rating > 0:
-							l.setRating(r.rating)
-						print "\t\t\tRating changed to " + str(r.rating)
-					if not options.noplaycounts:
-						if l.playcount != r.playcount:
-							l.setPlaycount(match.playcount)
-							print "\t\t\tPlay count changed to " + str(r.playcount)
+				if l is not None and r is not None:
+					if options.writeChanges:
+						if not options.noratings:
+							if l.rating != r.rating & r.rating > 0:
+								l.setRating(r.rating)
+							print "\t\t\tRating changed to " + str(r.rating)
+						if not options.noplaycounts:
+							if l.playcount != r.playcount:
+								l.setPlaycount(match.playcount)
+								print "\t\t\tPlay count changed to " + str(r.playcount)
 
 	# dump summary results
 	print "\nSummary\n------------------------------------"
