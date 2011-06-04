@@ -32,7 +32,7 @@ class WMPSong(BaseSong):
                 except ValueError:
                         print WMPSong.getItemInfo("UserRating")
                         self.rating = 0
-                self.playcount = WMPSong.getItemInfo("UserPlaycount")
+                self.playcount = WMPSong.getItemInfo("PlayCount")
                 self.filePath = WMPSong.sourceURL
 
                 
