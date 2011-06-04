@@ -106,9 +106,9 @@ def getParser(file_,  options):
 		print "\tassuming itunes on the mac"
 		return iTunesMacParser()
 	if file_ == "wmp":
-                print "\tassuming Windows Media Player"
-                from dumpwmp import WMPParser
-                return WMPParser();
+		print "\tassuming Windows Media Player"
+		from dumpwmp import WMPParser
+		return WMPParser();
 
 	desc = linecache.getline(file_,  2)
 	if desc== '':
@@ -170,8 +170,8 @@ class SongCorrelator(object):
 	def correlateSong(self, song, confirm, fastAndLoose,  promptForDisambiguate):
 		match = None
 		matches = self.parser.findSongBySize(song.size)
-                matchcount = len(matches)
-                    
+		matchcount = len(matches)
+		
 		# no results
 		if matchcount == 0:
 			print "\t no matches found"
@@ -186,19 +186,19 @@ class SongCorrelator(object):
 				if not fastAndLoose:
 					match = self.disambiguate(song, matches, promptForDisambiguate)
 				else:
-                                        try:
-                                                print "\t 50% match on " + self.dumpMatch(match)
-                                        except UnicodeEncodeError:
-                                                print "\t 50% match on unprintable song"
+					try:
+						print "\t 50% match on " + self.dumpMatch(match)
+					except UnicodeEncodeError:
+							print "\t 50% match on unprintable song"
 					self.partialMatches = self.partialMatches + 1
 		# multiple matches
 		else:
 			print "\t multiple matches"
 			for match in matches:
-                                try:
-                                        print "\t\t " + self.dumpMatch(match)
-                                except UnicodeEncodeError:
-                                        print "unprintable match"
+				try:
+					print "\t\t " + self.dumpMatch(match)
+				except UnicodeEncodeError:
+					print "unprintable match"
 			# attempt a resolution
 			match = self.disambiguate(song, matches, promptForDisambiguate)
 
@@ -228,22 +228,21 @@ class SongCorrelator(object):
 			return latstitlematch
 
 		if prompt:
-			 try:
+			try:
 				print "\t\t cannot disambiguate.  Trying to match " + song.filePath
-			 except UnicodeEncodeError:
-				print "\t\t cannot disambiguate. <UNPRINTABLE>"
+			except UnicodeEncodeError:
+				print "\t\t cannot disambiguate.  Trying to match **UNPRINTABLE**" 
 				return None
-				
-				print "Please select file or press <Enter> for no match:"
-				numMatch = 0
-				for match in matches:
-					numMatch = numMatch + 1
-					print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match) + ", " + match.filePath
+			print "Please select file or press <Enter> for no match:"
+			numMatch = 0
+			for match in matches:
+				numMatch = numMatch + 1
+				print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match) + ", " + match.filePath
 
-				selection = self.inputNumber("\t\t\t\t? ", 1, len(matches))
-				if selection > 0:
-					self.manuallyResolvedMatches = self.manuallyResolvedMatches + 1
-					return matches[selection - 1]
+			selection = self.inputNumber("\t\t\t\t? ", 1, len(matches))
+			if selection > 0:
+				self.manuallyResolvedMatches = self.manuallyResolvedMatches + 1
+				return matches[selection - 1]
 
 		# user did not select, record ambiguity
 		self.ambiguousMatches = self.ambiguousMatches + 1
