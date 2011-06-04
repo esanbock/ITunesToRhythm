@@ -68,7 +68,7 @@ def main(argv):
 					else:
 						if source.playcount == destination.playcount:
 							source = None
-							source = None
+							destination = None
 						else:
 							print "\t\t\tModifying destination " + str(source.playcount) + " vs " + str(destination.playcount)
 							outputModifications = outputModifications + 1
