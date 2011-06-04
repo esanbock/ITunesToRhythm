@@ -170,7 +170,10 @@ class SongCorrelator(object):
 	def correlateSong(self, song, confirm, fastAndLoose,  promptForDisambiguate):
 		match = None
 		matches = self.parser.findSongBySize(song.size)
-		matchcount = len(matches)
+		if matches is None:
+			matchcount = 0
+		else:
+			matchcount = len(matches)
 		
 		# no results
 		if matchcount == 0:
