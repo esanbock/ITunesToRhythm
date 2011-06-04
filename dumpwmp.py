@@ -22,18 +22,19 @@ from songparser import BaseSong, BaseLibraryParser
 
 class WMPSong(BaseSong):
         def __init__(self, WMPSong):
-                self.wmpNode = WMPSong
-                self.artist = WMPSong.getItemInfo("WM/AlbumArtist")
-                self.album = WMPSong.getItemInfo("WM/AlbumTitle")
-                self.title = WMPSong.name
-                self.size = WMPSong.getItemInfo("FileSize")
-                try:
-                        self.rating = int(WMPSong.getItemInfo("UserRating"))
-                except ValueError:
-                        print WMPSong.getItemInfo("UserRating")
-                        self.rating = 0
-                self.playcount = WMPSong.getItemInfo("PlayCount")
-                self.filePath = WMPSong.sourceURL
+			self.wmpNode = WMPSong
+			self.artist = WMPSong.getItemInfo("WM/AlbumArtist")
+			self.album = WMPSong.getItemInfo("WM/AlbumTitle")
+			self.title = WMPSong.name
+			self.size = WMPSong.getItemInfo("FileSize")
+			try:
+				self.rating = int(WMPSong.getItemInfo("UserRating"))
+			except ValueError:
+				print WMPSong.getItemInfo("UserRating")
+				self.rating = 0
+			self.playcount = WMPSong.getItemInfo("PlayCount")
+			self.playcount = atoi(self.playcount)
+			self.filePath = WMPSong.sourceURL
 
                 
         def setRating(self, rating):
