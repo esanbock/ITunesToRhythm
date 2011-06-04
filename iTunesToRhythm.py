@@ -46,6 +46,7 @@ def main(argv):
 	# go through each song in destination library
 	correlator = SongCorrelator(inputParser)
 	inputModifications = 0
+	outputModifications = 0
 	for song in allDestinationSongs:
 		try: 
 			print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
@@ -64,9 +65,12 @@ def main(argv):
 						l = match
 						print "\t\t\tModifying source"
 						inputModifications = inputModifications + 1
-					if r.playcount == l.playcount:
-						l = None
-						r = None
+					else:
+						if r.playcount == l.playcount:
+							l = None
+							r = None
+						else:
+							outputModifications = outputModifications + 1
 				# update database, if match
 				if options.writeChanges:
 					if not options.noratings:
@@ -86,6 +90,7 @@ def main(argv):
 	print "no matches = " + str(correlator.zeroMatches)
 	print "unresolved ambiguous matches = " + str(correlator.ambiguousMatches)
 	print "input modifications = " + str(inputModifications)	
+	print "output modifications = " + str(outputModifications)	
 
 	# save
 	if options.writeChanges:
