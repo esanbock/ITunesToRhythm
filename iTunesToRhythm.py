@@ -100,10 +100,10 @@ def main(argv):
 def getParser(file_,  options):
 	if file_ == "mysql":
 		print "\tassuming amarok database"
+		from dumpamarok import AmarokLibraryParser, AmarokSong
 		return AmarokLibraryParser(options.servername, options.database, options.username,  options.password)
 	if file_ == "itunes":
 		print "\tassuming itunes on the mac"
-		from dumpamarok import AmarokLibraryParser, AmarokSong
 		return iTunesMacParser()
 	if file_ == "wmp":
                 print "\tassuming Windows Media Player"
@@ -228,7 +228,11 @@ class SongCorrelator(object):
 			return latstitlematch
 
 		if prompt:
-			print "\t\t cannot disambiguate.  Trying to match " + song.filePath
+			 try:
+				print "\t\t cannot disambiguate.  Trying to match " + song.filePath
+			except UnicodeEncodeError:
+				print "\t\t cannot disambiguate. <UNPRINTABLE>"
+				return None
 			print "Please select file or press <Enter> for no match:"
 			numMatch = 0
 			for match in matches:
