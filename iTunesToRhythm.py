@@ -56,33 +56,33 @@ def main(argv):
 			# find equivalent itunes song
 			match = correlator.correlateSong(song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate)
 			# calculate if two way
-			l = song
-			r = match
-			if r is not None and l is not None:
+			destination = song
+			source = match
+			if source is not None and destination is not None:
 				if options.twoway:  
-					if r.playcount > l.playcount:
-						r = song
-						l = match
-						print "\t\t\tModifying source " + str(r.playcount) + " vs " + str(l.playcount)
+					if destination.playcount > source.playcount :
+						source = song
+						destination = match
+						print "\t\t\tModifying source " + str(source.playcount) + " vs " + str(destination.playcount)
 						inputModifications = inputModifications + 1
 					else:
-						if r.playcount == l.playcount:
-							l = None
-							r = None
+						if r.playcount == destination.playcount:
+							source = None
+							source = None
 						else:
-							print "\t\t\tModifying destination " + str(r.playcount) + " vs " + str(l.playcount)
+							print "\t\t\tModifying destination " + str(source.playcount) + " vs " + str(destination.playcount)
 							outputModifications = outputModifications + 1
 				# update database, if match
-				if l is not None and r is not None:
+				if destination is not None and source is not None:
 					if options.writeChanges:
 						if not options.noratings:
-							if l.rating != r.rating & r.rating > 0:
-								l.setRating(r.rating)
-							print "\t\t\tRating changed to " + str(r.rating)
+							if destination.rating != source.rating & source.rating > 0:
+								destination.setRating(source.rating)
+							print "\t\t\tRating changed to " + str(source.rating)
 						if not options.noplaycounts:
-							if l.playcount != r.playcount:
-								l.setPlaycount(match.playcount)
-								print "\t\t\tPlay count changed to " + str(r.playcount)
+							if destination.playcount != source.playcount:
+								destination.setPlaycount(match.playcount)
+								print "\t\t\tPlay count changed to " + str(source.playcount)
 
 	# dump summary results
 	print "\nSummary\n------------------------------------"
