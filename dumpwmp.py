@@ -72,7 +72,7 @@ def main(argv):
 
         for song in allSongs:
                 try:
-                        print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
+                        print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size) + ", " + str(song.playcount)
                 except:
                         print "\tunable to print song name"
                         
