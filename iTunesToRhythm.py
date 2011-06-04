@@ -63,13 +63,14 @@ def main(argv):
 					if r.playcount > l.playcount:
 						r = song
 						l = match
-						print "\t\t\tModifying source"
+						print "\t\t\tModifying source " + r.playcount + "vs" + l.playcount
 						inputModifications = inputModifications + 1
 					else:
 						if r.playcount == l.playcount:
 							l = None
 							r = None
 						else:
+							print "\t\t\tModifying destination " + r.playcount + "vs" + l.playcount
 							outputModifications = outputModifications + 1
 				# update database, if match
 				if options.writeChanges:
