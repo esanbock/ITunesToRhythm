@@ -47,10 +47,10 @@ def main(argv):
 	correlator = SongCorrelator(inputParser)
 	inputModifications = 0
 	for song in allDestinationSongs:
-                try: 
-                        print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
-                except UnicodeEncodeError as charError:
-                        print "*** UNICODE *** "
+		try: 
+			print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
+		except UnicodeEncodeError as charError:
+				print "*** UNICODE *** "
 		if song.size is not None and song.size != "Unknown":
 			# find equivalent itunes song
 			match = correlator.correlateSong(song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate)
@@ -70,13 +70,13 @@ def main(argv):
 				# update database, if match
 				if options.writeChanges:
 					if not options.noratings:
-                                                if l.rating != r.rating & r.rating > 0:
-                                                        l.setRating(r.rating)
-                                                        print "\t\t\tRating changed to " + str(r.rating)
+						if l.rating != r.rating & r.rating > 0:
+							l.setRating(r.rating)
+						print "\t\t\tRating changed to " + str(r.rating)
 					if not options.noplaycounts:
-                                                if l.playcount != r.playcount:
-                                                        l.setPlaycount(match.playcount)
-                                                        print "\t\t\tPlay count changed to " + str(r.playcount)
+						if l.playcount != r.playcount:
+							l.setPlaycount(match.playcount)
+							print "\t\t\tPlay count changed to " + str(r.playcount)
 
 	# dump summary results
 	print "\nSummary\n------------------------------------"
@@ -230,19 +230,20 @@ class SongCorrelator(object):
 		if prompt:
 			 try:
 				print "\t\t cannot disambiguate.  Trying to match " + song.filePath
-			except UnicodeEncodeError:
+			 except UnicodeEncodeError:
 				print "\t\t cannot disambiguate. <UNPRINTABLE>"
 				return None
-			print "Please select file or press <Enter> for no match:"
-			numMatch = 0
-			for match in matches:
-				numMatch = numMatch + 1
-				print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match) + ", " + match.filePath
+				
+				print "Please select file or press <Enter> for no match:"
+				numMatch = 0
+				for match in matches:
+					numMatch = numMatch + 1
+					print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match) + ", " + match.filePath
 
-			selection = self.inputNumber("\t\t\t\t? ", 1, len(matches))
-			if selection > 0:
-				self.manuallyResolvedMatches = self.manuallyResolvedMatches + 1
-				return matches[selection - 1]
+				selection = self.inputNumber("\t\t\t\t? ", 1, len(matches))
+				if selection > 0:
+					self.manuallyResolvedMatches = self.manuallyResolvedMatches + 1
+					return matches[selection - 1]
 
 		# user did not select, record ambiguity
 		self.ambiguousMatches = self.ambiguousMatches + 1
