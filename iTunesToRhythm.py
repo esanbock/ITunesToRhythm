@@ -22,7 +22,7 @@ if platform.system() == "Darwin":
 	sys.path.append('/sw/lib/python2.5/site-packages/')
 	from dumpitunesmac import iTunesMacParser, iTunesMacSong
 
-import libxml2
+import lxml
 import linecache
 from optparse import OptionParser,  OptionGroup
 
@@ -41,6 +41,7 @@ def main(argv):
 		print "\tUnable to open file. " + str(badio)
 		return -2
 	#retrieve destination songs
+	destinationParser.InitConsole()
 	allDestinationSongs = destinationParser.getSongs()
 
 	# go through each song in destination library

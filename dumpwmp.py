@@ -17,6 +17,8 @@
 
 import sys
 import win32com.client
+import win32console
+import codecs
 from pywintypes import com_error
 from songparser import BaseSong, BaseLibraryParser
 
@@ -48,12 +50,12 @@ class WMPSong(BaseSong):
 
 class WMPParser(BaseLibraryParser):
         def __init__(self):
-                self.wmp = win32com.client.Dispatch("WMPlayer.OCX");
+                self.wmp = win32com.client.Dispatch("WMPlayer.OCX")
                 self.cachedSongs = None;
 
         def getSongs(self):
                 if self.cachedSongs is not None:
-                        return self.cachedSongs;
+                        return self.cachedSongs
                 songs = self.wmp.mediaCollection.getAll()
                 result = []
                 try:
@@ -67,6 +69,12 @@ class WMPParser(BaseLibraryParser):
 
         def save(self):
                 pass
+
+        def InitConsole(self):
+                print "windows console"
+                if sys.stdout.encoding != 'cp850':
+                        sys.stdout = codecs.getwriter('cp850')(sys.stdout, 'strict')
+
 
 def main(argv):
         print "Reading from Windows Media Player"

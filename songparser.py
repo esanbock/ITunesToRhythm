@@ -14,7 +14,8 @@
 #You should have received a copy of the GNU General Public License
 #along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-import libxml2
+import lxml
+from lxml import etree
 
 class BaseSong(object):
 	def __init__(self, song):
@@ -29,8 +30,8 @@ class BaseSong(object):
 class BaseLibraryParser(object):
 	def __init__(self, location):
 		self.location = location
-		self.doc = libxml2.parseFile(location)
-		self.xpathContext = self.doc.xpathNewContext()
+		self.doc = etree.parse(location)
+		#self.xpathContext = self.doc.xpathNewContext()
 
 	#@abstractmethod
 	def getSongs(self):

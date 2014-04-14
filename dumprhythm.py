@@ -16,39 +16,39 @@
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
-import libxml2
+import lxml
 from songparser import BaseSong, BaseLibraryParser
 
 class RhythmSong(BaseSong):
 	def __init__(self, node):
 		self.xmlNode = node
-		self.artist = self.xmlNode.xpathEval("artist")[0].content
-		self.album = self.xmlNode.xpathEval("album")[0].content
-		self.title = self.xmlNode.xpathEval("title")[0].content
-		self.size = self.xmlNode.xpathEval("file-size")[0].content
-		self.filePath = self.xmlNode.xpathEval("location")[0].content
-		self.playcount = self.xmlNode.xpathEval("play-count")
-		self.rating = self.xmlNode.xpathEval("rating")
+		self.artist = self.xmlNode.xpath("artist")[0].text
+		self.album = self.xmlNode.xpath("album")[0].text
+		self.title = self.xmlNode.xpath("title")[0].text
+		self.size = self.xmlNode.xpath("file-size")[0].text
+		self.filePath = self.xmlNode.xpath("location")[0].text
+		self.playcount = self.xmlNode.xpath("play-count")
+		self.rating = self.xmlNode.xpath("rating")
 
 		if len(self.playcount) == 0:
 			self.playcount = 0
 		else:
-			self.playcount = int(self.playcount[0].content)
+			self.playcount = int(self.playcount[0].text)
 
 		if len(self.rating) == 0:
 			self.rating = 0
 		else:
-			self.rating = int(self.rating[0].content) * 20
+			self.rating = int(self.rating[0].text) * 20
 
 
 	def setRating(self, rating):
-		ratingNode = self.xmlNode.xpathEval("rating")
+		ratingNode = self.xmlNode.xpath("rating")
 		if len(ratingNode) == 0:
-			newNode = libxml2.newNode("rating")
-			newNode.setContent(str(rating / 20))
-			self.xmlNode.addChild(newNode)
+			newNode = etree.Element("rating")
+			newNode.text = str(rating / 20)
+			self.xmlNode.append(newNode)
 		else:
-			ratingNode[0].setContent(str(rating / 20))
+			ratingNode[0].text = str(rating / 20)
 
 	def setPlaycount(self, playcount):
 		playcountNode = self.xmlNode.xpathEval("play-count")
@@ -69,11 +69,11 @@ def main(argv):
 
 class RhythmLibraryParser(BaseLibraryParser):
 	def getSongs(self):
-		allSongNodes = self.xpathContext.xpathEval("//entry[@type='song']")
+		allSongNodes = self.doc.xpath("//entry[@type='song']")
 		return [RhythmSong(s) for s in allSongNodes]
 
 	def findSongBySize(self, size):
-		matches = self.xpathContext.xpathEval("//entry[@type='song' and file-size = '" + str(size)  + "']")
+		matches = self.doc.xpath("//entry[@type='song' and file-size = '" + str(size)  + "']")
 		matchingsongs = []
 		for match in matches:
 			song = RhythmSong(match)
