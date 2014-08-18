@@ -30,15 +30,15 @@ def main(argv):
 	# process command line
 	options, args = processCommandLine(argv)
 	try:
-		print "Reading input from " + args[0]
+		print( "Reading input from " + args[0] )
 		inputParser = getParser(args[0], options)
-		print "Writing to output " + args[1]
+		print( "Writing to output " + args[1] )
 		destinationParser = getParser(args[1], options)
 	except UnrecognizedFormatException as err:
-		print "\tFile format unrecognized.  Details - [" + err.value + "]"
+		print( "\tFile format unrecognized.  Details - [" + err.value + "]" )
 		return -1
 	except IOError as badio:
-		print "\tUnable to open file. " + str(badio)
+		print( "\tUnable to open file. " + str(badio) )
 		return -2
 	#retrieve destination songs
 	destinationParser.InitConsole()
@@ -50,9 +50,9 @@ def main(argv):
 	outputModifications = 0
 	for song in allDestinationSongs:
 		try: 
-			print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
+			print( song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size) )
 		except UnicodeEncodeError as charError:
-				print "*** UNICODE *** "
+				print( "*** UNICODE *** " )
 		if song.size is not None and song.size != "Unknown":
 			# find equivalent itunes song
 			match = correlator.correlateSong(song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate)
@@ -64,14 +64,14 @@ def main(argv):
 					if destination.playcount > source.playcount :
 						source = song
 						destination = match
-						print "\t\t\tModifying source " + str(source.playcount) + " vs " + str(destination.playcount)
+						print( "\t\t\tModifying source " + str(source.playcount) + " vs " + str(destination.playcount) )
 						inputModifications = inputModifications + 1
 					else:
 						if source.playcount == destination.playcount:
 							source = None
 							destination = None
 						else:
-							print "\t\t\tModifying destination " + str(source.playcount) + " vs " + str(destination.playcount)
+							print( "\t\t\tModifying destination " + str(source.playcount) + " vs " + str(destination.playcount) )
 							outputModifications = outputModifications + 1
 				# update database, if match
 				if destination is not None and source is not None:
@@ -79,42 +79,42 @@ def main(argv):
 						if not options.noratings:
 							if destination.rating != source.rating & source.rating > 0:
 								destination.setRating(source.rating)
-							print "\t\t\tRating changed to " + str(source.rating)
+							print( "\t\t\tRating changed to " + str(source.rating) )
 						if not options.noplaycounts:
 							if destination.playcount != source.playcount:
 								destination.setPlaycount(match.playcount)
-								print "\t\t\tPlay count changed to " + str(source.playcount)
+								print( "\t\t\tPlay count changed to " + str(source.playcount) )
 
 	# dump summary results
-	print "\nSummary\n------------------------------------"
-	print "manually resolved matches = " + str(correlator.manuallyResolvedMatches)
-	print "full matches = " + str(correlator.fullMatches)
-	print "partial matches = " + str(correlator.partialMatches)
-	print "no matches = " + str(correlator.zeroMatches)
-	print "unresolved ambiguous matches = " + str(correlator.ambiguousMatches)
-	print "input modifications = " + str(inputModifications)	
-	print "output modifications = " + str(outputModifications)	
+	print( "\nSummary\n------------------------------------" )
+	print( "manually resolved matches = " + str(correlator.manuallyResolvedMatches) )
+	print( "full matches = " + str(correlator.fullMatches) )
+	print( "partial matches = " + str(correlator.partialMatches) )
+	print( "no matches = " + str(correlator.zeroMatches) )
+	print( "unresolved ambiguous matches = " + str(correlator.ambiguousMatches) )
+	print( "input modifications = " + str(inputModifications) )
+	print( "output modifications = " + str(outputModifications) )	
 
 	# save
 	if options.writeChanges:
 		destinationParser.save()
-		print "Changes were written to destination"
+		print( "Changes were written to destination" )
 		if options.twoway:
 			inputParser.save()
-			print "Changes were written to source"
+			print( "Changes were written to source" )
 	else:
-		print "Changes were not written to destination \n\tuse -w to actually write changes to disk"
+		print( "Changes were not written to destination \n\tuse -w to actually write changes to disk" )
 
 def getParser(file_,  options):
 	if file_ == "mysql":
-		print "\tassuming amarok database"
+		print( "\tassuming amarok database" )
 		from dumpamarok import AmarokLibraryParser, AmarokSong
 		return AmarokLibraryParser(options.servername, options.database, options.username,  options.password)
 	if file_ == "itunes":
-		print "\tassuming itunes on the mac"
+		print( "\tassuming itunes on the mac" )
 		return iTunesMacParser()
 	if file_ == "wmp":
-		print "\tassuming Windows Media Player"
+		print( "\tassuming Windows Media Player" )
 		from dumpwmp import WMPParser
 		return WMPParser();
 
@@ -123,11 +123,11 @@ def getParser(file_,  options):
 		raise IOError("File not found")
 	if desc.find("Apple Computer") != -1:
 		#open itunes linbrary
-		print "\tdetected Itunes library"
+		print( "\tdetected Itunes library" )
 		from dumpitunes import iTunesLibraryParser, iTunesSong
 		return iTunesLibraryParser(file_)
 	if desc.find("rhythmdb") != -1:
-		print "\tdetected Rhythm box library"
+		print( "\tdetected Rhythm box library" )
 		from dumprhythm import RhythmLibraryParser, RhythmSong
 		return RhythmLibraryParser(file_)
 		
@@ -185,31 +185,31 @@ class SongCorrelator(object):
 		
 		# no results
 		if matchcount == 0:
-			print "\t no matches found"
+			print( "\t no matches found" )
 			self.zeroMatches = self.zeroMatches + 1
 		# full match
 		elif matchcount == 1:
 			match = matches[0]
 			if match.title == song.title:
-				print "\t 100% match on " + self.dumpMatch(match)
+				print( "\t 100% match on " + self.dumpMatch(match) )
 				self.fullMatches = self.fullMatches + 1
 			else:
 				if not fastAndLoose:
 					match = self.disambiguate(song, matches, promptForDisambiguate)
 				else:
 					try:
-						print "\t 50% match on " + self.dumpMatch(match)
+						print( "\t 50% match on " + self.dumpMatch(match) )
 					except UnicodeEncodeError:
-							print "\t 50% match on unprintable song"
+							print( "\t 50% match on unprintable song" )
 					self.partialMatches = self.partialMatches + 1
 		# multiple matches
 		else:
-			print "\t multiple matches"
+			print( "\t multiple matches" )
 			for match in matches:
 				try:
-					print "\t\t " + self.dumpMatch(match)
+					print( "\t\t " + self.dumpMatch(match) )
 				except UnicodeEncodeError:
-					print "unprintable match"
+					print( "unprintable match" )
 			# attempt a resolution
 			match = self.disambiguate(song, matches, promptForDisambiguate)
 
@@ -225,7 +225,7 @@ class SongCorrelator(object):
 
 	def disambiguate(self, song, matches, prompt):
 		# attempt to disambiguate by title
-		print "\t looking for secondary match on title"
+		print( "\t looking for secondary match on title" )
 		titlematchcount = 0
 		for match in matches:
 			if match.title == song.title:
@@ -234,21 +234,21 @@ class SongCorrelator(object):
 
 		if titlematchcount == 1:
 			# we successfully disambiguated using the title
-			print "\t\t disambiguated using title"
+			print( "\t\t disambiguated using title" )
 			self.fullMatches = self.fullMatches + 1
 			return latstitlematch
 
 		if prompt:
 			try:
-				print "\t\t cannot disambiguate.  Trying to match " + song.filePath
+				print( "\t\t cannot disambiguate.  Trying to match " + song.filePath )
 			except UnicodeEncodeError:
-				print "\t\t cannot disambiguate.  Trying to match **UNPRINTABLE**" 
+				print( "\t\t cannot disambiguate.  Trying to match **UNPRINTABLE**" )
 				return None
-			print "Please select file or press <Enter> for no match:"
+			print( "Please select file or press <Enter> for no match:" )
 			numMatch = 0
 			for match in matches:
 				numMatch = numMatch + 1
-				print "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match) + ", " + match.filePath
+				print( "\t\t\t\t[" + str(numMatch) + "] " + self.dumpMatch(match) + ", " + match.filePath )
 
 			selection = self.inputNumber("\t\t\t\t? ", 1, len(matches))
 			if selection > 0:
@@ -267,13 +267,13 @@ class SongCorrelator(object):
 			resultNum = int(result)
 
 			if resultNum < min_ or resultNum > max_:
-				print "out of range"
+				print( "out of range" )
 				return self.inputNumber(msg, min_, max_)
 
 			return resultNum
 		except ValueError:
             # int() failed
-			print "invalid input"
+			print( "invalid input" )
 			return self.inputNumber(msg, min_, max_)
 
 class UnrecognizedFormatException( Exception ):
