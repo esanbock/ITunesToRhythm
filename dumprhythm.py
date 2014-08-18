@@ -61,11 +61,11 @@ class RhythmSong(BaseSong):
 
 def main(argv):
 	location = argv[1]
-	print "Reading database from " + location
+	print( "Reading database from " + location )
 	parser = RhythmLibraryParser(location)
 	allSongs = parser.getSongs()
 	for song in allSongs:
-		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
+		print( song.artist + " - " + song.album + " - " + song.title + " - " + song.size )
 
 class RhythmLibraryParser(BaseLibraryParser):
 	def getSongs(self):
