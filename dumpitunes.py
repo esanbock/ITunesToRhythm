@@ -83,11 +83,11 @@ class iTunesSong(BaseSong):
 
 def main(argv):
 	location = argv[1]
-	print "Reading iTunes library from " + location
+	print( "Reading iTunes library from " + location )
 	parser = iTunesLibraryParser(location)
 	allSongs = parser.getSongs()
 	for song in allSongs:
-		print song.artist + " - " + song.album + " - " + song.title + " - " + song.size
+		print( song.artist + " - " + song.album + " - " + song.title + " - " + song.size )
 
 class iTunesLibraryParser(BaseLibraryParser):
 	def getSongs(self):
