@@ -272,7 +272,7 @@ class SongCorrelator(object):
 
 			return resultNum
 		except ValueError:
-            # int() failed
+	    # int() failed
 			print( "invalid input" )
 			return self.inputNumber(msg, min_, max_)
 
