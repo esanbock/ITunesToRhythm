@@ -17,6 +17,7 @@
 
 import sys
 import libxml2
+import time
 from songparser import BaseSong, BaseLibraryParser
 
 class iTunesSong(BaseSong):
@@ -29,6 +30,7 @@ class iTunesSong(BaseSong):
 		self.rating = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Rating']")
 		self.playcount = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Play Count']")
 		self.filePath = self.xmlNode.xpathEval("string[preceding-sibling::* = 'Location']")[0].content
+		self.dateadded = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Date Added']")
 
 		if len(self.artist) == 0:
 			self.artist = "Unknown"
@@ -55,6 +57,13 @@ class iTunesSong(BaseSong):
 		else:
 			self.playcount = int(self.playcount[0].content)
 
+		if len(self.dateadded) == 0:
+			self.dateadded = 0
+		else:
+		#http://www.epochconverter.com/
+			self.dateadded = int(time.mktime(time.strptime(self.dateadded[0].content, '%Y-%m-%dT%H:%M:%SZ')))
+
+
 	def setRating(self,  rating):
 		ratingValueNodes = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Rating'][1]")
 		if len(ratingValueNodes) == 0:
@@ -80,6 +89,19 @@ class iTunesSong(BaseSong):
 			playcountValueNode = playcountValueNodes[0]
 
 		playcountValueNode.setContent(str(playcount))
+
+	def setDateAdded(self, dateadded):
+		dateaddedValueNodes = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Date Added'][1]")
+		if len(dateaddedValueNodes) == 0:
+			newdateaddedKeyNode = libxml2.newNode("key")
+			self.xmlNode.addChild(newdateaddedKeyNode)
+			newdateaddedKeyNode.setContent("Date Added")
+			dateaddedValueNode = libxml2.newNode("first-seen")
+			newdateaddedKeyNode.addSibling(dateaddedValueNode)
+		else:
+			dateaddedValueNode = dateaddedValueNodes[0]
+
+		dateaddedValueNode.setContent(str(dateadded))
 
 def main(argv):
 	location = argv[1]

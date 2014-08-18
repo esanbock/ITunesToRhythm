@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 #Copyright @ 2010 Douglas Esanbock
+#Modifications to import "Date Added" Copyright @ September 2013 Edgar Salgado
 #iTunesToRhythm is free software; you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
 #the Free Software Foundation; either version 3 of the License, or
@@ -84,6 +85,10 @@ def main(argv):
 							if destination.playcount != source.playcount:
 								destination.setPlaycount(match.playcount)
 								print( "\t\t\tPlay count changed to " + str(source.playcount) )
+					if options.dateadded:
+						if destination.dateadded != source.dateadded:
+							destination.setDateAdded(match.dateadded)
+							print( "\t\t\tDate added changed to " + str(source.dateadded) )
 
 	# dump summary results
 	print( "\nSummary\n------------------------------------" )
@@ -148,6 +153,7 @@ def processCommandLine(argv):
 	parser.add_option("--noplaycounts", action="store_true", dest= "noplaycounts",  default = False,  help = "do not update play counts")
 	parser.add_option("--noratings", action="store_true", dest= "noratings",  default = False,  help = "do not update ratings")
 	parser.add_option("--twoway", action="store_true", dest= "twoway",  default = False,  help = "sync up the two files, giving precedence to the items with the higher playcount")
+	parser.add_option("--dateadded", action="store_true", dest= "dateadded",  default = False,  help = "update dates (only iTunes to Rhythmbox on Linux)")
 
 	amarokGroup = OptionGroup(parser,  "Amarok options",  "Options for connecting to an Amarok MySQL remote database")
 	amarokGroup.add_option("-s",  "--server",  dest="servername",  help = "host name of the MySQL database server")

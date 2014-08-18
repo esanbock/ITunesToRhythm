@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 #Copyright @ 2010 Douglas Esanbock
+#Modifications to import "Date Added" Copyright @ September 2013 Edgar Salgado
 #iTunesToRhythm is free software; you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
 #the Free Software Foundation; either version 3 of the License, or
@@ -26,6 +27,7 @@ class BaseSong(object):
 		self.rating = 0
 		self.playcount = 0
 		self.filePath = ""
+		self.dateadded = 0
 
 class BaseLibraryParser(object):
 	def __init__(self, location):
