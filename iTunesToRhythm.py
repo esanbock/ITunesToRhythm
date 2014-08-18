@@ -42,7 +42,7 @@ def main(argv):
 		print( "\tUnable to open file. " + str(badio) )
 		return -2
 	#retrieve destination songs
-	destinationParser.InitConsole()
+	#destinationParser.InitConsole()
 	allDestinationSongs = destinationParser.getSongs()
 
 	# go through each song in destination library
