@@ -65,7 +65,10 @@ def main(argv):
 	parser = RhythmLibraryParser(location)
 	allSongs = parser.getSongs()
 	for song in allSongs:
-		print( song.artist + " - " + song.album + " - " + song.title + " - " + song.size )
+		try:
+			print( song.artist + " - " + song.album + " - " + song.title + " - " + song.size )
+		except UnicodeEncodeError as charError:
+			print( "*** UNICODE *** " )
 
 class RhythmLibraryParser(BaseLibraryParser):
 	def getSongs(self):
