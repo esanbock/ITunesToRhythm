@@ -105,6 +105,12 @@ def main(argv):
 	else:
 		print( "Changes were not written to destination \n\tuse -w to actually write changes to disk" )
 
+def SafePrint(foo):
+	try: 
+		print( foo )
+	except UnicodeEncodeError as charError:
+		print( "*** UNICODE *** " )
+
 def getParser(file_,  options):
 	if file_ == "mysql":
 		print( "\tassuming amarok database" )
@@ -191,7 +197,7 @@ class SongCorrelator(object):
 		elif matchcount == 1:
 			match = matches[0]
 			if match.title == song.title:
-				print( "\t 100% match on " + self.dumpMatch(match) )
+				SafePrint( "\t 100% match on " + self.dumpMatch(match) )
 				self.fullMatches = self.fullMatches + 1
 			else:
 				if not fastAndLoose:
