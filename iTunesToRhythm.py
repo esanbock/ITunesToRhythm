@@ -86,11 +86,11 @@ def main(argv):
 						if destination.playcount != source.playcount:
 							destination.setPlaycount(match.playcount)
 							print( "\t\t\tPlay count changed to " + str(source.playcount) )
-				if options.dateadded:
-					if destination.dateadded is not None and source.dateadded is not None:
-						if destination.dateadded != source.dateadded:
-							destination.setDateAdded(match.dateadded)
-							print( "\t\t\tDate added changed to " + str(source.dateadded) )
+					if options.dateadded:
+						if destination.dateadded is not None and source.dateadded is not None:
+							if destination.dateadded != source.dateadded:
+								destination.setDateAdded(match.dateadded)
+								print( "\t\t\tDate added changed to " + str(source.dateadded) )
 
 	# dump summary results
 	print( "\nSummary\n------------------------------------" )
