@@ -60,6 +60,7 @@ def main(argv):
 			# calculate if two way
 			destination = song
 			source = match
+			# update database, if match
 			if source is not None and destination is not None:
 				if options.twoway:  
 					if destination.playcount > source.playcount :
@@ -74,18 +75,19 @@ def main(argv):
 						else:
 							print( "\t\t\tModifying destination " + str(source.playcount) + " vs " + str(destination.playcount) )
 							outputModifications = outputModifications + 1
-				# update database, if match
-				if destination is not None and source is not None:
-					if options.writeChanges:
-						if not options.noratings:
-							if destination.rating != source.rating & source.rating > 0:
-								destination.setRating(source.rating)
-							print( "\t\t\tRating changed to " + str(source.rating) )
-						if not options.noplaycounts:
-							if destination.playcount != source.playcount:
-								destination.setPlaycount(match.playcount)
-								print( "\t\t\tPlay count changed to " + str(source.playcount) )
-					if options.dateadded:
+				else:
+				    outputModifications = outputModifications + 1
+				if options.writeChanges:
+					if not options.noratings:
+						if destination.rating != source.rating & source.rating > 0:
+							destination.setRating(source.rating)
+						print( "\t\t\tRating changed to " + str(source.rating) )
+					if not options.noplaycounts:
+						if destination.playcount != source.playcount:
+							destination.setPlaycount(match.playcount)
+							print( "\t\t\tPlay count changed to " + str(source.playcount) )
+				if options.dateadded:
+					if destination.dateadded is not None and source.dateadded is not None:
 						if destination.dateadded != source.dateadded:
 							destination.setDateAdded(match.dateadded)
 							print( "\t\t\tDate added changed to " + str(source.dateadded) )
@@ -284,7 +286,7 @@ class SongCorrelator(object):
 
 			return resultNum
 		except ValueError:
-	    # int() failed
+			# int() failed
 			print( "invalid input" )
 			return self.inputNumber(msg, min_, max_)
 
