@@ -16,35 +16,34 @@
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
-import lxml
 from songparser import BaseSong, BaseLibraryParser
 
 class RhythmSong(BaseSong):
 	def __init__(self, node):
 		self.xmlNode = node
-		self.artist = self.xmlNode.xpath("artist")[0].text
-		self.album = self.xmlNode.xpath("album")[0].text
-		self.title = self.xmlNode.xpath("title")[0].text
-		self.size = self.xmlNode.xpath("file-size")[0].text
-		self.filePath = self.xmlNode.xpath("location")[0].text
-		self.playcount = self.xmlNode.xpath("play-count")
-		self.rating = self.xmlNode.xpath("rating")
-		self.dateadded = self.xmlNode.xpath("first-seen")
+		self.artist = self.xmlNode.xpathEval("artist")[0].content
+		self.album = self.xmlNode.xpathEval("album")[0].content
+		self.title = self.xmlNode.xpathEval("title")[0].content
+		self.size = self.xmlNode.xpathEval("file-size")[0].content
+		self.filePath = self.xmlNode.xpathEval("location")[0].content
+		self.playcount = self.xmlNode.xpathEval("play-count")
+		self.rating = self.xmlNode.xpathEval("rating")
+		self.dateadded = self.xmlNode.xpathEval("first-seen")[0].content
 
 		if len(self.playcount) == 0:
 			self.playcount = 0
 		else:
-			self.playcount = int(self.playcount[0].text)
+			self.playcount = int(self.playcount[0].content)
 
 		if len(self.rating) == 0:
 			self.rating = 0
 		else:
-			self.rating = int(self.rating[0].text) * 20
+			self.rating = int(self.rating[0].content) * 20
 
 		if len(self.dateadded) == 0:
 			self.dateadded = 0
 		else:
-			self.dateadded = int(self.dateadded[0].text)
+			self.dateadded = int(self.dateadded)
 
 
 	def setRating(self, rating):
@@ -57,7 +56,7 @@ class RhythmSong(BaseSong):
 			ratingNode[0].text = str(rating / 20)
 
 	def setPlaycount(self, playcount):
-		playcountNode = self.xmlNode.xpathEval("play-count")
+		playcountNode = self.xmlNode.xpath("play-count")
 		if len(playcountNode) == 0:
 			newNode = libxml2.newNode("play-count")
 			newNode.setContent(str(playcount))
@@ -66,7 +65,7 @@ class RhythmSong(BaseSong):
 			playcountNode[0].setContent(str(playcount))
 
 	def setDateAdded(self, dateadded):
-		dateaddedNode = self.xmlNode.xpathEval("first-seen")
+		dateaddedNode = self.xmlNode.xpath("first-seen")
 		if len(dateaddedNode) == 0:
 			newNode = libxml2.newNode("first-seen")
 			newNode.setContent(str(dateadded))
@@ -87,7 +86,7 @@ def main(argv):
 
 class RhythmLibraryParser(BaseLibraryParser):
 	def getSongs(self):
-		allSongNodes = self.doc.xpath("//entry[@type='song']")
+		allSongNodes = self.doc.xpathEval("//entry[@type='song']")
 		return [RhythmSong(s) for s in allSongNodes]
 
 	def findSongBySize(self, size):
