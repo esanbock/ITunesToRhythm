@@ -16,6 +16,7 @@
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
+import libxml2
 from songparser import BaseSong, BaseLibraryParser
 
 class RhythmSong(BaseSong):
@@ -47,16 +48,16 @@ class RhythmSong(BaseSong):
 
 
 	def setRating(self, rating):
-		ratingNode = self.xmlNode.xpath("rating")
+		ratingNode = self.xmlNode.xpathEval("rating")
 		if len(ratingNode) == 0:
-			newNode = etree.Element("rating")
-			newNode.text = str(rating / 20)
-			self.xmlNode.append(newNode)
+			newNode = libxml2.newNode("rating")
+			newNode.setContent(str(rating / 20))
+			self.xmlNode.addChild(newNode)
 		else:
 			ratingNode[0].text = str(rating / 20)
 
 	def setPlaycount(self, playcount):
-		playcountNode = self.xmlNode.xpath("play-count")
+		playcountNode = self.xmlNode.xpathEval("play-count")
 		if len(playcountNode) == 0:
 			newNode = libxml2.newNode("play-count")
 			newNode.setContent(str(playcount))
@@ -65,7 +66,7 @@ class RhythmSong(BaseSong):
 			playcountNode[0].setContent(str(playcount))
 
 	def setDateAdded(self, dateadded):
-		dateaddedNode = self.xmlNode.xpath("first-seen")
+		dateaddedNode = self.xmlNode.xpathEval("first-seen")
 		if len(dateaddedNode) == 0:
 			newNode = libxml2.newNode("first-seen")
 			newNode.setContent(str(dateadded))
