@@ -76,8 +76,8 @@ def main(argv):
 							print( "\t\t\tModifying destination " + str(source.playcount) + " vs " + str(destination.playcount) )
 							outputModifications = outputModifications + 1
 				else:
-				    outputModifications = outputModifications + 1
-				if options.writeChanges:
+					outputModifications = outputModifications + 1
+				if options.writeChanges and source is not None and destination is not None:
 					if not options.noratings:
 						if destination.rating != source.rating & source.rating > 0:
 							destination.setRating(source.rating)

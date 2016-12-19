@@ -39,7 +39,7 @@ class RhythmSong(BaseSong):
 		if len(self.rating) == 0:
 			self.rating = 0
 		else:
-			self.rating = int(self.rating[0].content) * 20
+			self.rating = int(round(float(self.rating[0].content))) * 20
 
 		if len(self.dateadded) == 0:
 			self.dateadded = 0
@@ -91,7 +91,7 @@ class RhythmLibraryParser(BaseLibraryParser):
 		return [RhythmSong(s) for s in allSongNodes]
 
 	def findSongBySize(self, size):
-		matches = self.doc.xpath("//entry[@type='song' and file-size = '" + str(size)  + "']")
+		matches = self.doc.xpathEval("//entry[@type='song' and file-size = '" + str(size)  + "']")
 		matchingsongs = []
 		for match in matches:
 			song = RhythmSong(match)
