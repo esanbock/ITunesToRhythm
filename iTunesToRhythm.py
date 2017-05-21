@@ -56,7 +56,7 @@ def main(argv):
 				print( "*** UNICODE *** " )
 		if song.size is not None and song.size != "Unknown":
 			# find equivalent itunes song
-			match = correlator.correlateSong(song, options.confirm, options.fastAndLoose,  options.promptForDisambiguate)
+			match = correlator.correlateSong(song, options.confirm, options.fastAndLoose, options.usefilename, options.promptForDisambiguate)
 			# calculate if two way
 			destination = song
 			source = match
@@ -156,6 +156,7 @@ def processCommandLine(argv):
 	parser.add_option("--noratings", action="store_true", dest= "noratings",  default = False,  help = "do not update ratings")
 	parser.add_option("--twoway", action="store_true", dest= "twoway",  default = False,  help = "sync up the two files, giving precedence to the items with the higher playcount")
 	parser.add_option("--dateadded", action="store_true", dest= "dateadded",  default = False,  help = "update dates (only iTunes to Rhythmbox on Linux)")
+	parser.add_option("--usefilename", action="store_true", dest= "usefilename",  default = False,  help = "use file names instead of file sizes to match songs")
 
 	amarokGroup = OptionGroup(parser,  "Amarok options",  "Options for connecting to an Amarok MySQL remote database")
 	amarokGroup.add_option("-s",  "--server",  dest="servername",  help = "host name of the MySQL database server")
@@ -189,9 +190,12 @@ class SongCorrelator(object):
 		self.manuallyResolvedMatches = 0
 
 	# attempt to find matching song in database
-	def correlateSong(self, song, confirm, fastAndLoose,  promptForDisambiguate):
+	def correlateSong(self, song, confirm, fastAndLoose, usefilename, promptForDisambiguate):
 		match = None
-		matches = self.parser.findSongBySize(song.size)
+		if usefilename:	
+			matches = self.parser.findSongByTitle(song.title)
+		else:
+			matches = self.parser.findSongBySize(song.size)
 		if matches is None:
 			matchcount = 0
 		else:
