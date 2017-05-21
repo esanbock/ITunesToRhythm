@@ -50,5 +50,14 @@ class BaseLibraryParser(object):
 				return results
 				
 	#@abstractmethod
+	def findSongByTitle(self, title):
+		results = []
+		allSongs = self.getSongs()
+		for song in allSongs:
+			if song.title == title:
+				results.append(song)
+				return results
+				
+	#@abstractmethod
 	def save(self):
 		self.doc.saveFile(self.location)
