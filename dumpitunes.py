@@ -29,7 +29,10 @@ class iTunesSong(BaseSong):
 		self.size = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Size']")
 		self.rating = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Rating']")
 		self.playcount = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Play Count']")
-		self.filePath = self.xmlNode.xpathEval("string[preceding-sibling::* = 'Location']")[0].content
+		try:
+			self.filePath = self.xmlNode.xpathEval("string[preceding-sibling::* = 'Location']")[0].content
+		except IndexError:
+			self.filePath = ""
 		self.dateadded = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Date Added']")
 
 		if len(self.artist) == 0:

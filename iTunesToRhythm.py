@@ -124,8 +124,13 @@ def getParser(file_,  options):
 		from dumpamarok import AmarokLibraryParser, AmarokSong
 		return AmarokLibraryParser(options.servername, options.database, options.username,  options.password)
 	if file_ == "itunes":
-		print( "\tassuming itunes on the mac" )
-		return iTunesMacParser()
+		if platform.system() == 'Windows':
+			print( "\tassuming itunes on windows" )
+			from dumpituneswin import iTunesWinParser, iTunesWinSong
+			return iTunesWinParser()
+		else:
+			print( "\tassuming itunes on the mac" )
+			return iTunesMacParser()
 	if file_ == "wmp":
 		print( "\tassuming Windows Media Player" )
 		from dumpwmp import WMPParser
