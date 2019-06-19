@@ -68,11 +68,11 @@ class iTunesWinParser(BaseLibraryParser):
 		pass
 
 def main(argv):
-	print "Reading from iTunes running on Windows (win32com)"
+	print("Reading from iTunes running on Windows (win32com)")
 	parser = iTunesWinParser()
 
 	if len(argv) == 2:
-		print "Using playlist " + argv[1]
+		print("Using playlist " + argv[1])
 		allSongs = parser.getPlaylistFiles(argv[1])
 	else:
 		allSongs = parser.getSongs()

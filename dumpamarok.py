@@ -26,11 +26,11 @@ def main(argv):
 	username = argv[3]
 	pwd = argv[4]
 
-	print "Reading database from " + username + "@" + server + "/" + database
+	print( "Reading database from " + username + "@" + server + "/" + database )
 	parser = AmarokLibraryParser(server,  database,  username,  pwd)
 	allSongs = parser.getSongs()
 	for song in allSongs:
-		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
+		print( song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size))
 
 
 class AmarokSong(BaseSong):

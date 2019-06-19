@@ -54,17 +54,17 @@ class iTunesMacParser(BaseLibraryParser):
 		pass
 
 def main(argv):
-	print "Reading from iTunes running on Mac (appscript)"
+	print("Reading from iTunes running on Mac (appscript)")
 	parser = iTunesMacParser()
 
 	if len(argv) == 2:
-		print "Using playlist " + argv[1]
+		print("Using playlist " + argv[1])
 		allSongs = parser.getPlaylistFiles(argv[1])
 	else:
 		allSongs = parser.getSongs()
 
 	for song in allSongs:
-		print song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size)
+		print(song.artist + " - " + song.album + " - " + song.title + " - " + str(song.size))
 
 if __name__ == "__main__":
 	main(sys.argv)
