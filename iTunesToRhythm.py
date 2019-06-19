@@ -238,7 +238,7 @@ class SongCorrelator(object):
 
 		#review
 		if confirm:
-			foo = raw_input('press <enter> to continue, Ctrl-C to cancel')
+			foo = input('press <enter> to continue, Ctrl-C to cancel')
 
 		#done
 		return match
@@ -283,7 +283,7 @@ class SongCorrelator(object):
 		return None
 
 	def inputNumber(self, msg, min_, max_):
-		result = raw_input(msg)
+		result = input(msg)
 		if len(result) == 0:
 			return 0
 		try:
