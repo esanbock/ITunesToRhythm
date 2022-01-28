@@ -34,6 +34,7 @@ class iTunesSong(BaseSong):
 		except IndexError:
 			self.filePath = ""
 		self.dateadded = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Date Added']")
+		self.playdate = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Play Date UTC']")
 
 		if len(self.artist) == 0:
 			self.artist = "Unknown"
@@ -65,6 +66,11 @@ class iTunesSong(BaseSong):
 		else:
 		#http://www.epochconverter.com/
 			self.dateadded = int(time.mktime(time.strptime(self.dateadded[0].content, '%Y-%m-%dT%H:%M:%SZ')))
+
+		if len(self.playdate) == 0:
+			self.playdate = 0
+		else:
+			self.playdate = int(time.mktime(time.strptime(self.playdate[0].content, '%Y-%m-%dT%H:%M:%SZ')))
 
 
 	def setRating(self,  rating):
@@ -105,6 +111,19 @@ class iTunesSong(BaseSong):
 			dateaddedValueNode = dateaddedValueNodes[0]
 
 		dateaddedValueNode.setContent(str(dateadded))
+
+	def setPlayDate(self,  playdate):
+		playdateValueNodes = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Play Date UTC'][1]")
+		if len(playdateValueNodes) == 0:
+			newPlayDateKeyNode = libxml2.newNode("key")
+			self.xmlNode.addChild(newPlayDateKeyNode)
+			newPlayDateKeyNode.setContent("Play Date UTC")
+			playdateValueNode = libxml2.newNode("last-played")
+			newPlayDateKeyNode.addSibling(playdateValueNode)
+		else:
+			playdateValueNode = playdateValueNodes[0]
+
+		playdateValueNode.setContent(str(playdate))
 
 def main(argv):
 	location = argv[1]

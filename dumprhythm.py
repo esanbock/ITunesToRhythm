@@ -30,6 +30,7 @@ class RhythmSong(BaseSong):
 		self.playcount = self.xmlNode.xpathEval("play-count")
 		self.rating = self.xmlNode.xpathEval("rating")
 		self.dateadded = self.xmlNode.xpathEval("first-seen")[0].content
+		self.playdate = self.xmlNode.xpathEval("last-played")
 
 		if len(self.playcount) == 0:
 			self.playcount = 0
@@ -45,6 +46,11 @@ class RhythmSong(BaseSong):
 			self.dateadded = 0
 		else:
 			self.dateadded = int(self.dateadded)
+
+		if len(self.playdate) == 0:
+			self.playdate = 0
+		else:
+			self.playdate = int(self.playdate)
 
 
 	def setRating(self, rating):
@@ -73,6 +79,15 @@ class RhythmSong(BaseSong):
 			self.xmlNode.addChild(newNode)
 		else:
 			dateaddedNode[0].setContent(str(dateadded))
+
+	def setPlayDate(self, playdate):
+		playdateNode = self.xmlNode.xpathEval("last-played")
+		if len(playdateNode) == 0:
+			newNode = libxml2.newNode("last-played")
+			newNode.setContent(str(playdate))
+			self.xmlNode.addChild(newNode)
+		else:
+			playdateNode[0].setContent(str(playdate))
 
 def main(argv):
 	location = argv[1]

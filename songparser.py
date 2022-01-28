@@ -27,6 +27,7 @@ class BaseSong(object):
 		self.playcount = 0
 		self.filePath = ""
 		self.dateadded = 0
+		self.playdate = 0
 
 class BaseLibraryParser(object):
 	def __init__(self, location):
