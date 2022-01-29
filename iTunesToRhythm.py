@@ -91,6 +91,11 @@ def main(argv):
 							if destination.dateadded != source.dateadded:
 								destination.setDateAdded(match.dateadded)
 								print( "\t\t\tDate added changed to " + str(source.dateadded) )
+					if options.playdate:
+						if destination.playdate is not None and source.playdate is not None:
+							if destination.playdate != source.playdate:
+								destination.setPlayDate(match.playdate)
+								print( "\t\t\tDate played changed to " + str(source.playdate) )
 
 	# dump summary results
 	print( "\nSummary\n------------------------------------" )
@@ -161,6 +166,7 @@ def processCommandLine(argv):
 	parser.add_option("--noratings", action="store_true", dest= "noratings",  default = False,  help = "do not update ratings")
 	parser.add_option("--twoway", action="store_true", dest= "twoway",  default = False,  help = "sync up the two files, giving precedence to the items with the higher playcount")
 	parser.add_option("--dateadded", action="store_true", dest= "dateadded",  default = False,  help = "update dates (only iTunes to Rhythmbox on Linux)")
+	parser.add_option("--playdate", action="store_true", dest= "playdate",  default = False,  help = "update play dates (only iTunes to Rhythmbox on Linux)")
 	parser.add_option("--useSongTitle", action="store_true", dest= "useSongTitle",  default = False,  help = "use song titles instead of file sizes to match songs")
 
 	amarokGroup = OptionGroup(parser,  "Amarok options",  "Options for connecting to an Amarok MySQL remote database")
