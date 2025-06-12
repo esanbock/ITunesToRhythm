@@ -60,7 +60,15 @@ class BaseLibraryParser(object):
 # Check if we're on macOS
 if platform.system() == "Darwin":
     # Import ScriptingBridge directly without Foundation
-    import ScriptingBridge
+    try:
+        import ScriptingBridge
+    except ImportError:
+        print("ScriptingBridge module not found. This is required for Mac integration.")
+        print("Try installing pyobjc-framework-ScriptingBridge with pip in a virtual environment:")
+        print("python3 -m venv venv")
+        print("source venv/bin/activate")
+        print("pip install -r requirements.txt")
+        ScriptingBridge = None
 
 class iTunesMacSong(BaseSong):
     def __init__(self, track):
@@ -123,6 +131,12 @@ class iTunesMacParser(BaseLibraryParser):
     def __init__(self, location=None):
         super().__init__(location)
         
+        # Check if ScriptingBridge is available
+        if 'ScriptingBridge' not in globals() or ScriptingBridge is None:
+            print("ScriptingBridge is not available. Mac integration will not work.")
+            self.music_app = None
+            return
+            
         # Determine which app to use (iTunes or Music)
         self.app_name = "Music"
         if int(platform.mac_ver()[0].split('.')[0]) < 10 or \
@@ -130,10 +144,26 @@ class iTunesMacParser(BaseLibraryParser):
             self.app_name = "iTunes"
             
         # Initialize the ScriptingBridge connection
-        self.music_app = ScriptingBridge.SBApplication.applicationWithBundleIdentifier_(
-            f"com.apple.{self.app_name.lower()}")
+        try:
+            self.music_app = ScriptingBridge.SBApplication.applicationWithBundleIdentifier_(
+                f"com.apple.{self.app_name.lower()}")
+        except Exception as e:
+            print(f"Error initializing {self.app_name} app: {e}")
+            self.music_app = None
+        
+        # Cache for songs to avoid reloading
+        self._songs_cache = None
 
     def getSongs(self):
+        # Return cached songs if available
+        if self._songs_cache is not None:
+            return self._songs_cache
+            
+        # Check if ScriptingBridge is available
+        if self.music_app is None:
+            print("Music app is not available. Cannot get songs.")
+            return []
+            
         try:
             # Make sure the Music/iTunes app is running
             self.music_app.activate()
@@ -168,6 +198,8 @@ class iTunesMacParser(BaseLibraryParser):
             except Exception as e:
                 print(f"Error getting tracks: {e}")
             
+            # Cache the songs
+            self._songs_cache = songs
             return songs
             
         except Exception as e:
