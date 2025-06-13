@@ -22,3 +22,4 @@ develop-eggs/
 .idea/modules.xml
 .idea/vcs.xml
 .DS_Store
+.idea/workspace.xml
