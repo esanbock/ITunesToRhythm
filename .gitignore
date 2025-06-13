@@ -16,3 +16,9 @@ var/
 sdist/
 develop-eggs/
 .installed.cfg
+.idea/aws.xml
+.idea/ITunesToRhythm.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.DS_Store

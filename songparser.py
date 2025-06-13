@@ -15,50 +15,56 @@
 #You should have received a copy of the GNU General Public License
 #along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-import libxml2
+
+# Try to import libxml2 directly, fall back to adapter if not available
+try:
+    import libxml2
+except ImportError:
+    # Use our adapter instead of libxml2
+    import libxml2_adapter as libxml2
+    print("Using libxml2 adapter (lxml-based) as libxml2 is not installed")
 
 class BaseSong(object):
-	def __init__(self, song):
-		self.artist = "Unknown"
-		self.album = "Unknown"
-		self.title = "Unknown"
-		self.size = "Unknown"
-		self.rating = 0
-		self.playcount = 0
-		self.filePath = ""
-		self.dateadded = 0
-		self.playdate = 0
+    def __init__(self, song):
+        self.artist = "Unknown"
+        self.album = "Unknown"
+        self.title = "Unknown"
+        self.size = "Unknown"
+        self.rating = 0
+        self.playcount = 0
+        self.filePath = ""
+        self.dateadded = 0
 
 class BaseLibraryParser(object):
-	def __init__(self, location):
-		print( "loading file " + location );
-		self.location = location
-		self.doc = libxml2.parseFile(location)
-		self.xpathContext = self.doc.xpathNewContext()
-		print( "file loaded " );
+    def __init__(self, location):
+        print("Loading file " + location)
+        self.location = location
+        self.doc = libxml2.parseFile(location)
+        self.xpathContext = self.doc.xpathNewContext()
+        print("File loaded")
 
-	#@abstractmethod
-	def getSongs(self):
-		raise NotImplementedError("Must override this method in a subclass")
+    #@abstractmethod
+    def getSongs(self):
+        raise NotImplementedError("Must override this method in a subclass")
 
-	#@abstractmethod
-	def findSongBySize(self, size):
-		results = []
-		allSongs = self.getSongs()
-		for song in allSongs:
-			if song.size == size:
-				results.append(song)
-				return results
-				
-	#@abstractmethod
-	def findSongByTitle(self, title):
-		results = []
-		allSongs = self.getSongs()
-		for song in allSongs:
-			if song.title == title:
-				results.append(song)
-				return results
-				
-	#@abstractmethod
-	def save(self):
-		self.doc.saveFile(self.location)
+    #@abstractmethod
+    def findSongBySize(self, size):
+        results = []
+        allSongs = self.getSongs()
+        for song in allSongs:
+            if song.size == size:
+                results.append(song)
+                return results
+                
+    #@abstractmethod
+    def findSongByTitle(self, title):
+        results = []
+        allSongs = self.getSongs()
+        for song in allSongs:
+            if song.title == title:
+                results.append(song)
+                return results
+                
+    #@abstractmethod
+    def save(self):
+        self.doc.saveFile(self.location)

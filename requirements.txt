@@ -1,0 +1,7 @@
+pip==22.3.1
+setuptools==65.5.1
+wheel==0.38.4
+pyobjc-framework-ScriptingBridge>=9.0
+# XML parsing libraries - either one can be used
+lxml>=4.9.0
+libxml2-python>=2.9.0; platform_system != "Windows"  # libxml2 is not easily available on Windows
