@@ -4,6 +4,7 @@ It implements the libxml2 API using lxml, allowing code that was written for lib
 to work with lxml instead.
 """
 
+import lxml.etree as ET
 from lxml import etree
 
 def parseFile(filename):
@@ -21,19 +22,20 @@ class Document:
     def saveFile(self, filename):
         """Save the document to a file."""
         self.doc.write(filename, encoding='utf-8', xml_declaration=True, pretty_print=True)
+        
+    def xpathEval(self, xpath_expr):
+         results = self.doc.getroot().xpath(xpath_expr)
+         return [Node(r) if hasattr(r, 'tag') else r for r in results]
 
 class XPathContext:
     def __init__(self, doc):
         self.doc = doc
         self.nsmap = {}
-        
+
     def xpathEval(self, xpath_expr):
-        """Evaluate an XPath expression and return the results."""
-        try:
-            results = self.doc.xpath(xpath_expr, namespaces=self.nsmap)
-            return [Node(node) for node in results]
-        except etree.XPathError:
-            return []
+        results = self.doc.getroot().xpath(xpath_expr)
+        return [Node(r) if hasattr(r, 'tag') else r for r in results]
+        
 
 class Node:
     def __init__(self, etree_node):
@@ -45,14 +47,11 @@ class Node:
         if hasattr(self.node, 'text') and self.node.text is not None:
             return self.node.text
         return ""
-        
+
     def xpathEval(self, xpath_expr):
-        """Evaluate an XPath expression relative to this node."""
-        try:
-            results = self.node.xpath(xpath_expr)
-            return [Node(node) for node in results]
-        except etree.XPathError:
-            return []
+        results = self.node.xpath(xpath_expr)
+        return [Node(r) if hasattr(r, 'tag') else r for r in results]
+
             
     def addChild(self, node):
         """Add a child node to this node."""
@@ -81,3 +80,5 @@ class Node:
 def newNode(name):
     """Create a new XML node with the given name."""
     return Node(etree.Element(name))
+
+

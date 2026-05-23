@@ -16,7 +16,11 @@
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
-import libxml2
+try:
+    import libxml2
+except ImportError:
+    import libxml2_adapter
+from lxml import etree
 from songparser import BaseSong, BaseLibraryParser
 
 class RhythmSong(BaseSong):
@@ -50,44 +54,44 @@ class RhythmSong(BaseSong):
 		if len(self.playdate) == 0:
 			self.playdate = 0
 		else:
-			self.playdate = int(self.playdate)
+			self.playdate = int(self.playdate[0].content)
 
 
 	def setRating(self, rating):
 		ratingNode = self.xmlNode.xpathEval("rating")
 		if len(ratingNode) == 0:
-			newNode = libxml2.newNode("rating")
-			newNode.setContent(str(rating / 20))
-			self.xmlNode.addChild(newNode)
+			newNode = etree.Element("rating")
+			newNode.text = str(rating / 20)
+			self.xmlNode.append(newNode)
 		else:
 			ratingNode[0].text = str(rating / 20)
 
 	def setPlaycount(self, playcount):
 		playcountNode = self.xmlNode.xpathEval("play-count")
 		if len(playcountNode) == 0:
-			newNode = libxml2.newNode("play-count")
-			newNode.setContent(str(playcount))
-			self.xmlNode.addChild(newNode)
+			newNode = etree.Element("play-count")
+			newNode.text = str(playcount)
+			self.xmlNode.append(newNode)
 		else:
-			playcountNode[0].setContent(str(playcount))
+			playcountNode[0].text = str(playcount)
 
 	def setDateAdded(self, dateadded):
 		dateaddedNode = self.xmlNode.xpathEval("first-seen")
 		if len(dateaddedNode) == 0:
-			newNode = libxml2.newNode("first-seen")
-			newNode.setContent(str(dateadded))
-			self.xmlNode.addChild(newNode)
+			newNode = etree.Element("first-seen")
+			newNode.text = str(dateadded)
+			self.xmlNode.append(newNode)
 		else:
-			dateaddedNode[0].setContent(str(dateadded))
+			dateaddedNode[0].text = str(dateadded)
 
 	def setPlayDate(self, playdate):
 		playdateNode = self.xmlNode.xpathEval("last-played")
 		if len(playdateNode) == 0:
-			newNode = libxml2.newNode("last-played")
-			newNode.setContent(str(playdate))
-			self.xmlNode.addChild(newNode)
+			newNode = etree.Element("last-played")
+			newNode.text = str(playdate)
+			self.xmlNode.append(newNode)
 		else:
-			playdateNode[0].setContent(str(playdate))
+			playdateNode[0].text = str(playdate)
 
 def main(argv):
 	location = argv[1]
