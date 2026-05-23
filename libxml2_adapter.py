@@ -48,11 +48,31 @@ class Node:
             return self.node.text
         return ""
 
+    @property
+    def text(self):
+        """Property to read text content (compatible with lxml element access)."""
+        return self.node.text
+
+    @text.setter
+    def text(self, value):
+        """Property to set text content (compatible with lxml element access)."""
+        self.node.text = value
+        self.content = value
+
     def xpathEval(self, xpath_expr):
         results = self.node.xpath(xpath_expr)
         return [Node(r) if hasattr(r, 'tag') else r for r in results]
 
-            
+    def append(self, child):
+        """Append a child node (compatible with lxml element access)."""
+        if isinstance(child, Node):
+            self.node.append(child.node)
+        elif hasattr(child, 'tag'):
+            # Raw lxml element
+            self.node.append(child)
+        else:
+            raise TypeError(f"Cannot append {type(child)}")
+
     def addChild(self, node):
         """Add a child node to this node."""
         if isinstance(node, Node):
