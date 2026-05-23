@@ -54,6 +54,7 @@ class AmazonMusicParser:
 	def getSongs(self):
 		songs = []
 		seen_ids = set()
+		seen_artist_title = set()
 		db = rleveldb.RawLevelDb(self.db_path)
 		for rec in db.iterate_records_raw():
 			key = rec.user_key.decode('utf-8', errors='replace')
@@ -77,6 +78,14 @@ class AmazonMusicParser:
 							continue
 						if track_id:
 							seen_ids.add(track_id)
+						# Also deduplicate by artist+title for entries without IDs
+						artist = data.get("artist", {}).get("name", "")
+						title = data.get("title", "")
+						artist_title_key = (artist.lower(), title.lower())
+						if not track_id:
+							if artist_title_key in seen_artist_title:
+								continue
+						seen_artist_title.add(artist_title_key)
 						songs.append(AmazonMusicSong(data))
 				except json.JSONDecodeError:
 					pass

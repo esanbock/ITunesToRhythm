@@ -16,10 +16,6 @@
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
-try:
-    import libxml2
-except ImportError:
-    import libxml2_adapter
 from lxml import etree
 from songparser import BaseSong, BaseLibraryParser
 

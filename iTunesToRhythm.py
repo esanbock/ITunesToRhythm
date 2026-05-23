@@ -23,7 +23,6 @@ if platform.system() == "Darwin":
     # sys.path.append('/sw/lib/python2.5/site-packages/')
     from dumpitunesmac import iTunesMacParser, iTunesMacSong
 
-import lxml
 import linecache
 from optparse import OptionParser, OptionGroup
 
@@ -82,7 +81,7 @@ def main(argv):
                     outputModifications = outputModifications + 1
                 if options.writeChanges and source is not None and destination is not None:
                     if not options.noratings:
-                        if destination.rating != source.rating & source.rating > 0:
+                        if destination.rating != source.rating and source.rating > 0:
                             destination.setRating(source.rating)
                         print("\t\t\tRating changed to " + str(source.rating))
                     if not options.noplaycounts:
@@ -139,11 +138,11 @@ def getParser(file_, options):
     if file_ == "wmp":
         print("\tassuming Windows Media Player")
         from dumpwmp import WMPParser
-        return WMPParser();
+        return WMPParser()
     if file_ == "amazonmusic":
         print("\tassuming Amazon Music")
-        from dumpamazonmusic import AmazonMusicParser
-        return AmazonMusicParser();
+        from dumpAmazonMusic import AmazonMusicParser
+        return AmazonMusicParser()
 
     desc = linecache.getline(file_, 2)
     if desc == '':

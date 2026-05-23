@@ -27,46 +27,7 @@ except ImportError:
     import libxml2_adapter as libxml2
     print("Using libxml2 adapter (lxml-based) as libxml2 is not installed")
 
-class BaseSong(object):
-    def __init__(self, song):
-        self.artist = "Unknown"
-        self.album = "Unknown"
-        self.title = "Unknown"
-        self.size = "Unknown"
-        self.rating = 0
-        self.playcount = 0
-        self.filePath = ""
-        self.dateadded = 0
-
-class BaseLibraryParser(object):
-    def __init__(self, location):
-        print("Loading file " + location)
-        self.location = location
-        self.doc = libxml2.parseFile(location)
-        self.xpathContext = self.doc.xpathNewContext()
-        print("File loaded")
-
-    def getSongs(self):
-        raise NotImplementedError("Must override this method in a subclass")
-
-    def findSongBySize(self, size):
-        results = []
-        allSongs = self.getSongs()
-        for song in allSongs:
-            if song.size == size:
-                results.append(song)
-                return results
-                
-    def findSongByTitle(self, title):
-        results = []
-        allSongs = self.getSongs()
-        for song in allSongs:
-            if song.title == title:
-                results.append(song)
-                return results
-                
-    def save(self):
-        self.doc.saveFile(self.location)
+from songparser import BaseSong, BaseLibraryParser
 
 class iTunesSong(BaseSong):
     def __init__(self, songNode):
