@@ -4,8 +4,20 @@ It implements the libxml2 API using lxml, allowing code that was written for lib
 to work with lxml instead.
 """
 
-import lxml.etree as ET
-from lxml import etree
+try:
+    import lxml.etree as ET
+    from lxml import etree
+except ImportError as exc:
+    # This adapter is the lxml-based fallback used when the native libxml2
+    # bindings are unavailable. If lxml is also missing there is no XML backend
+    # at all, so raise a clear, actionable ImportError. We deliberately do NOT
+    # print or sys.exit() here: this module is imported by the main
+    # iTunesToRhythm program, which must be free to handle the failure itself.
+    raise ImportError(
+        "No XML backend available: neither 'libxml2' nor 'lxml' is installed. "
+        "Install lxml with 'python3 -m pip install lxml' "
+        "(or 'python3 -m pip install -r requirements.txt')."
+    ) from exc
 
 def parseFile(filename):
     """Parse an XML file and return a document object."""

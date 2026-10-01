@@ -19,13 +19,23 @@ import sys
 import time
 import os
 
-# Try to import libxml2 directly, fall back to adapter if not available
+# Try to import the native libxml2 bindings, falling back to the lxml-based
+# adapter when they are unavailable. When imported by iTunesToRhythm.py a
+# missing backend propagates to the caller; only a direct script run turns it
+# into a friendly message and exit.
 try:
     import libxml2
 except ImportError:
-    # Use our adapter instead of libxml2
-    import libxml2_adapter as libxml2
-    print("Using libxml2 adapter (lxml-based) as libxml2 is not installed")
+    try:
+        import libxml2_adapter as libxml2
+    except ImportError as exc:
+        # When imported as a library (by iTunesToRhythm.py), re-raise so the
+        # caller handles the missing backend. When run directly as a script,
+        # print a friendly message and exit instead of dumping a traceback.
+        if __name__ == "__main__":
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
+        raise
 
 from songparser import BaseSong, BaseLibraryParser
 
@@ -108,12 +118,18 @@ class iTunesSong(BaseSong):
             newdateaddedKeyNode = libxml2.newNode("key")
             self.xmlNode.addChild(newdateaddedKeyNode)
             newdateaddedKeyNode.setContent("Date Added")
-            dateaddedValueNode = libxml2.newNode("first-seen")
+            # The value element must be <date> so it matches the key xpath above
+            # and the ISO-8601 format the constructor parses on read.
+            dateaddedValueNode = libxml2.newNode("date")
             newdateaddedKeyNode.addSibling(dateaddedValueNode)
         else:
             dateaddedValueNode = dateaddedValueNodes[0]
 
-        dateaddedValueNode.setContent(str(dateadded))
+        # The constructor stores dateadded as an epoch int (via time.mktime).
+        # Write it back in the same ISO-8601 form iTunes uses so a later read
+        # round-trips through time.strptime('%Y-%m-%dT%H:%M:%SZ') correctly.
+        isoDate = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(int(dateadded)))
+        dateaddedValueNode.setContent(isoDate)
 
 class iTunesLibraryParser(BaseLibraryParser):
     def getSongs(self):

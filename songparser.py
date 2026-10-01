@@ -16,13 +16,15 @@
 #along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-# Try to import libxml2 directly, fall back to adapter if not available
+# Try to import the native libxml2 bindings, falling back to the lxml-based
+# adapter when they are unavailable. Any failure from the adapter (e.g. lxml
+# also missing) is allowed to propagate: this module is imported by the main
+# iTunesToRhythm program, so errors must reach the caller rather than being
+# swallowed here.
 try:
     import libxml2
 except ImportError:
-    # Use our adapter instead of libxml2
     import libxml2_adapter as libxml2
-    print("Using libxml2 adapter (lxml-based) as libxml2 is not installed")
 
 class BaseSong(object):
     def __init__(self, song):

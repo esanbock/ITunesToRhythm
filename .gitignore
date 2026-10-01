@@ -5,6 +5,10 @@
 
 *.py[co]
 
+# Virtual environments
+.venv/
+venv/
+
 # Packages
 *.egg
 *.egg-info
