@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Supported synchronization directions</title>
+  <desc id="desc">iTunes Music Library.xml is a one-way source. Rhythmbox, Amarok, iTunes on Mac, and Windows Media Player all synchronize two-way with each other.</desc>
+
+  <defs>
+    <!-- two-way: end marker points forward (along the line) -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#93a1b5"/>
+    </marker>
+    <!-- two-way: start marker points backward (toward line start) -->
+    <marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M10,0 L0,5 L10,10 z" fill="#93a1b5"/>
+    </marker>
+    <!-- one-way accent marker (forward) -->
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4a9ee8"/>
+    </marker>
+
+    <style>
+      .node rect { stroke-width: 1.5; }
+      .sync rect { fill: #1b2330; stroke: #3a4759; }
+      .source rect { fill: #122235; stroke: #4a9ee8; }
+      .label { fill: #e6ebf2; font-size: 15px; font-weight: 600; text-anchor: middle; }
+      .sublabel { fill: #93a1b5; font-size: 11px; text-anchor: middle; }
+      .edge { stroke: #93a1b5; stroke-width: 1.75; fill: none; }
+      .edge-one { stroke: #4a9ee8; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+      .legend-text { fill: #93a1b5; font-size: 12px; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="760" height="460" fill="#0f141c" rx="14"/>
+
+  <!-- ================= EDGES (drawn first, under nodes) ================= -->
+
+  <!-- Two-way edges between the four sync players -->
+  <!-- Rhythmbox (left) <-> Amarok (right) : top horizontal -->
+  <line class="edge" x1="254" y1="150" x2="506" y2="150" marker-start="url(#arrowStart)" marker-end="url(#arrow)"/>
+  <!-- iTunes Mac (bottom-left) <-> WMP (bottom-right) : bottom horizontal -->
+  <line class="edge" x1="254" y1="330" x2="506" y2="330" marker-start="url(#arrowStart)" marker-end="url(#arrow)"/>
+  <!-- Rhythmbox <-> iTunes Mac : left vertical -->
+  <line class="edge" x1="170" y1="178" x2="170" y2="302" marker-start="url(#arrowStart)" marker-end="url(#arrow)"/>
+  <!-- Amarok <-> WMP : right vertical -->
+  <line class="edge" x1="590" y1="178" x2="590" y2="302" marker-start="url(#arrowStart)" marker-end="url(#arrow)"/>
+  <!-- Rhythmbox <-> WMP : diagonal -->
+  <line class="edge" x1="254" y1="170" x2="506" y2="310" marker-start="url(#arrowStart)" marker-end="url(#arrow)"/>
+  <!-- iTunes Mac <-> Amarok : diagonal -->
+  <line class="edge" x1="254" y1="310" x2="506" y2="170" marker-start="url(#arrowStart)" marker-end="url(#arrow)"/>
+
+  <!-- One-way source edges from iTunes Library (top center) -->
+  <!-- to Rhythmbox (top edge) -->
+  <path class="edge-one" d="M340,72 C280,96 215,108 180,122" marker-end="url(#arrowAccent)"/>
+  <!-- to Amarok (top edge) -->
+  <path class="edge-one" d="M420,72 C480,96 545,108 580,122" marker-end="url(#arrowAccent)"/>
+  <!-- to WMP (right side, swinging out) -->
+  <path class="edge-one" d="M448,66 C620,110 648,250 626,302" marker-end="url(#arrowAccent)"/>
+
+  <!-- ================= NODES ================= -->
+
+  <!-- iTunes Library source (top center) -->
+  <g class="node source">
+    <rect x="300" y="24" width="160" height="48" rx="10"/>
+    <text class="label" x="380" y="44">iTunes Library</text>
+    <text class="sublabel" x="380" y="60">Music Library.xml · source only</text>
+  </g>
+
+  <!-- Rhythmbox (top-left) -->
+  <g class="node sync">
+    <rect x="90" y="126" width="160" height="48" rx="10"/>
+    <text class="label" x="170" y="155">Rhythmbox</text>
+  </g>
+
+  <!-- Amarok (top-right) -->
+  <g class="node sync">
+    <rect x="510" y="126" width="160" height="48" rx="10"/>
+    <text class="label" x="590" y="149">Amarok</text>
+    <text class="sublabel" x="590" y="164">MySQL</text>
+  </g>
+
+  <!-- iTunes Mac (bottom-left) -->
+  <g class="node sync">
+    <rect x="90" y="306" width="160" height="48" rx="10"/>
+    <text class="label" x="170" y="329">iTunes</text>
+    <text class="sublabel" x="170" y="344">Mac</text>
+  </g>
+
+  <!-- Windows Media Player (bottom-right) -->
+  <g class="node sync">
+    <rect x="510" y="306" width="160" height="48" rx="10"/>
+    <text class="label" x="590" y="329">Windows Media</text>
+    <text class="sublabel" x="590" y="344">Player</text>
+  </g>
+
+  <!-- ================= LEGEND ================= -->
+  <g transform="translate(240,398)">
+    <rect x="-10" y="0" width="300" height="52" rx="8" fill="#141a24" stroke="#28323f"/>
+    <line x1="10" y1="18" x2="50" y2="18" class="edge" marker-start="url(#arrowStart)" marker-end="url(#arrow)"/>
+    <text class="legend-text" x="62" y="22">Two-way sync (ratings &amp; playcounts)</text>
+    <line x1="10" y1="38" x2="50" y2="38" class="edge-one" marker-end="url(#arrowAccent)"/>
+    <text class="legend-text" x="62" y="42">One-way import (source only)</text>
+  </g>
+</svg>

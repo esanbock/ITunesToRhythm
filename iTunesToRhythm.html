@@ -1,206 +1,303 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>iTunesToRhythm — sync ratings &amp; playcounts across music players</title>
+  <meta name="description" content="A tool that transfers ratings and playcounts between iTunes, RhythmBox, Amarok, and Windows Media Player, with two-way synchronization support.">
+  <style>
+    :root {
+      --bg: #0d1118;
+      --surface: #141a24;
+      --surface-2: #1b2330;
+      --border: #28323f;
+      --text: #e6ebf2;
+      --muted: #93a1b5;
+      --accent: #4a9ee8;
+      --accent-soft: rgba(74, 158, 232, 0.14);
+      --code-bg: #0f141c;
+      --radius: 12px;
+      --maxw: 820px;
+    }
 
+    * { box-sizing: border-box; }
 
-  
-  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>iTunesToRhythm</title>
-  
+    html { scroll-behavior: smooth; }
 
-  
-  
-  <style type="text/css">
-h1 {
-  border-style: solid;
-  background-color: #cc9933;
-}
-p {
-  font-family: "Times New Roman",Times,serif;
-  background-position: left center;
-  background-attachment: fixed;
-}
-code {
-  font-family: Courier New;
-  font-size: small;
-}
-command {
-  border-style: solid;
-  border-width: 1px;
-  font-family: Courier New;
-  font-size: small;
-  background-color: #ffffcc;
-}
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #090d14 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+    }
 
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    header.hero {
+      text-align: center;
+      padding: 72px 20px 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+      background: radial-gradient(ellipse at top, var(--accent-soft), transparent 60%);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, var(--accent), #8fd0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p.tagline {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(232, 134, 74, 0.35);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .figure {
+      text-align: center;
+      margin: 0 0 48px;
+    }
+
+    .figure img {
+      width: 100%;
+      max-width: 640px;
+      height: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .figure figcaption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      letter-spacing: -0.01em;
+    }
+
+    h2:first-of-type { margin-top: 0; }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 6px 0; }
+
+    .note {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      color: var(--muted);
+      margin: 20px 0;
+    }
+
+    code {
+      font-family: "SF Mono", "Fira Code", "Courier New", monospace;
+      font-size: 0.9em;
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+
+    pre.cmd {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      overflow-x: auto;
+      margin: 16px 0;
+      font-family: "SF Mono", "Fira Code", "Courier New", monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: #d4dae3;
+    }
+
+    pre.cmd code {
+      background: none;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .cmd .flag { color: var(--accent); }
+
+    .example {
+      margin: 24px 0;
+    }
+    .example p { margin: 0 0 8px; color: var(--muted); }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
   </style>
-<script type="text/javascript">
+</head>
+<body>
+  <header class="hero">
+    <h1>iTunesToRhythm</h1>
+    <p class="tagline">Transfer your ratings and playcounts between music players — iTunes, RhythmBox, Amarok, and Windows Media Player.</p>
+    <span class="badge">Two-way sync · iTunes (Mac) · RhythmBox · Amarok · WMP</span>
+  </header>
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-18736589-1']);
-  _gaq.push(['_trackPageview']);
+  <div class="wrap">
+    <figure class="figure">
+      <img alt="Diagram of supported synchronization directions between players: iTunes Library is a one-way source, while Rhythmbox, Amarok, iTunes on Mac, and Windows Media Player all sync two-way." src="supported-direction.svg" width="760" height="460">
+      <figcaption>Supported synchronization directions</figcaption>
+    </figure>
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+    <section>
+      <h2>Prerequisites</h2>
+      <ul>
+        <li>Rhythmbox, Amarok, Windows Media Player, or iTunes</li>
+        <li>Python</li>
+        <li>libxml2</li>
+        <li>python-libxml2 (Python bindings for libxml2)</li>
+        <li>MySQLdb Python bindings <em>(if using Amarok)</em></li>
+        <li>pywin32 <em>(if using Windows Media Player)</em></li>
+        <li>appscript <em>(if using iTunes on a Mac)</em></li>
+      </ul>
+      <div class="note">
+        If you are running a desktop distribution of Linux (such as Ubuntu), you probably already have most of these installed.
+      </div>
+    </section>
 
-</script></head><body>
-<h1>iTunesToRhythm</h1>
-<p>This little piece of insanity is a tool that transfers your
-ratings and playcounts between various players (iTunes, RhythmBox, and
-Amarok).  Supports <strong>two-way</strong> synchronization in iTunes Mac,
-RhythmBox, Amarok, and Windows Media Player<br>
-</p>
-<p><img style="width: 525px; height: 298px;" alt="" src="Supported%20direction.png"><br>
-</p>
+    <section>
+      <h2>Execution</h2>
+      <ol>
+        <li>Download and extract <a href="iTunesToRhythm.tar.bz2">iTunesToRhythm.tar.bz2</a>.</li>
+        <li>Move, copy, or mount all your music where RhythmBox or Amarok can find it (the folder structure doesn't matter).</li>
+        <li>Import all your music into your new player (Amarok or RhythmBox).</li>
+        <li>Copy or mount your <code>iTunes Music Library.xml</code> file to Linux if copying from iTunes. If going to or from Amarok or RhythmBox, skip this step.</li>
+        <li>
+          Run the following command:
+          <pre class="cmd"><code>iTunesToRhythm.py <span class="flag">-w -a</span> ITunes\ Music\ Library.xml ~/.local/share/rhythmbox/rhythmdb.xml</code></pre>
+        </li>
+        <li>Manually resolve any ambiguities you are prompted for.</li>
+        <li>Enjoy your music.</li>
+      </ol>
+      <div class="note">
+        On a Mac, iTunes is supported directly by using <code>itunes</code> as the source or destination — so you could, for example, import from Amarok straight into iTunes. On Windows, Windows Media Player is supported by using <code>wmp</code> as the source or destination.
+      </div>
+    </section>
 
-<h4>Prerequesites:<br>
-</h4>
+    <section>
+      <h2>Examples</h2>
 
-<ul>
+      <div class="example">
+        <p>Copy statistics from RhythmBox to an Amarok MySQL database, excluding ratings:</p>
+        <pre class="cmd"><code>iTunesToRhythm.py <span class="flag">--noratings -a</span> ~/.local/share/rhythmbox/rhythmdb.xml mysql <span class="flag">-s</span> musicserver <span class="flag">-d</span> amarok <span class="flag">-u</span> amarokuser <span class="flag">-p</span> verysecret</code></pre>
+      </div>
 
-  <li>Rhythmbox, Amarok, Windows Media Player, or iTunes<br>
-  </li>
-  <li>Python<br>
-  </li>
-  <li>libxml2<br>
-  </li>
-  <li>python-libxml2 (Python bindings for libxml2)</li>
-  <li>MySQLdb python bindings (If using Amarok)<br>
-  </li>
-  <li>pywin32 (If using Windows Media Player)</li>
-  <li>appscript (If using iTunes on a Mac)<br>
-  </li>
+      <div class="example">
+        <p>Copy ratings and playcounts from Amarok to iTunes on a Mac:</p>
+        <pre class="cmd"><code>iTunesToRhythm.py mysql <span class="flag">-s</span> musicserver <span class="flag">-d</span> amarok <span class="flag">-u</span> amarokuser <span class="flag">-p</span> verysecret itunes</code></pre>
+      </div>
+    </section>
 
-</ul>
+    <section>
+      <h2>Usage</h2>
+      <pre class="cmd"><code>Usage: iTunesToRhythm [options] &lt;inputfile&gt;|itunes|mysql|wmp|amazonmusic &lt;outputfile&gt;|itunes|mysql|wmp|amazonmusic
 
-<div style="margin-left: 40px;">If you are running a desktop
-distribution of linux (such as Ubuntu), you probably
-already have these installed.</div>
+Options:
+  -h, --help           show this help message and exit
+  -c, --confirm        confirm every match
+  -w, --writechanges   write changes to destination file
+  -a, --disambiguate   prompt user to resolve ambiguities
+  -l, --fastandloose   ignore differences in file names when a file size
+                       match is made against a single song; will not
+                       resolve multiple matches
+      --noplaycounts   do not update play counts
+      --noratings      do not update ratings
+      --twoway         sync both sides, giving precedence to the copy with
+                       the higher play count
+      --dateadded      update dates (iTunes to RhythmBox on Linux only)
+      --useSongTitle   match songs by title instead of file size
 
-<h4>Execution:</h4>
+  Amarok connection options:
+    Options for connecting to an Amarok MySQL remote database
 
-<p>
-</p>
+    -s SERVERNAME, --server=SERVERNAME
+                       host name of the MySQL database server
+    -d DATABASE, --database=DATABASE
+                       database name of the Amarok database
+    -u USERNAME, --username=USERNAME
+                       login name of the Amarok database
+    -p PASSWORD, --password=PASSWORD
+                       password of the user</code></pre>
+      <div class="note">
+        Specifying <code>itunes</code> uses a running iTunes instance for synchronization — on macOS (via appscript) or on Windows (via the iTunes COM API). Use <code>wmp</code> for Windows Media Player and <code>amazonmusic</code> to read from Amazon Music.
+      </div>
+    </section>
 
-<ol>
+    <section>
+      <h2>Supported players</h2>
+      <p>Each backend can be read (used as a source). Most can also be written (used as a destination):</p>
+      <ul>
+        <li><strong>iTunes (Mac)</strong> — read &amp; write, via a running iTunes instance (<code>itunes</code>)</li>
+        <li><strong>iTunes (Windows)</strong> — read &amp; write, via the iTunes COM API (<code>itunes</code>)</li>
+        <li><strong>iTunes Library.xml</strong> — read &amp; write (pass the file path)</li>
+        <li><strong>RhythmBox</strong> — read &amp; write (pass the <code>rhythmdb.xml</code> path)</li>
+        <li><strong>Amarok</strong> — read &amp; write, via its MySQL database (<code>mysql</code>)</li>
+        <li><strong>Windows Media Player</strong> — read &amp; write (<code>wmp</code>)</li>
+        <li><strong>Amazon Music</strong> — read only, used as a source (<code>amazonmusic</code>). Best-effort: it scrapes the Amazon Music desktop app's local cache (Windows only), so it sees only cached tracks and can break when the app changes.</li>
+      </ul>
+      <p>Two-way synchronization is available with the <code>--twoway</code> flag, which gives precedence to the copy with the higher play count.</p>
+    </section>
 
-  <li>Download the following file and extract it somewhere:</li>
-  <ul>
-    <li><a href="iTunesToRhythm.tar.bz2">iTunesToRhythm.tar.bz2</a></li>
-  </ul>
-  <li>Move/copy/mount all your music where RhythmBox or Amarok can find
-them (the
-folder structure doesn't matter)<br>
-  </li>
-  <li>Import all your music into your new player (amarok or rhythmbox)<br>
-  </li>
-  <li>Copy or mount your "iTunes Music Library.xml" file to linux, if
-copying from itunes.&nbsp; If going to/from amarok or rhythm, ignore
-this step<br>
-  </li>
-  <li>Execute the following command: <command>iTunesToRhythm.py
--w -a ITunes\ Music\ Library.xml ~/.local/share/rhythmbox/rhythmdb.xml</command>
-    <br>
-  </li>
-  <li>Manually resolve any ambiguities your are prompted for</li>
-  <li>Enjoy your music<br>
-  </li>
-  <li>Note: if running this tool on a Mac, iTunes is directly supported
-by using "itunes" as the source or destination.&nbsp; One could for
-instance, import from amarok directly into ituns on a Mac.  On Windows, Windows Media
-Player is supported by using "wmp" as the source or destination.<br>
-  </li>
-</ol>
+    <section>
+      <h2>Roadmap</h2>
+      <ol>
+        <li>Investigate replacing the fragile Amazon Music cache reader with the official <a href="https://developer.amazon.com/docs/music/API_web_overview_v2.html">Amazon Music Web API</a> (OAuth). Two caveats make this uncertain: (1) it is a partner program — the app's Login With Amazon security profile must be allow-listed and approved by Amazon Music, so it is not something an individual user can simply enable for personal use; and (2) even once approved, the API exposes no play counts and no star ratings, so it still can't drive a full ratings/playcount sync.</li>
+        <li>Optional, lossy Amazon Music export: map star ratings onto Amazon Music's like / dislike state, since the API has no numeric rating field.</li>
+        <li>Playlist synchronization across players.</li>
+      </ol>
+    </section>
 
-<code></code><code></code>
-<h4>Examples:</h4>
+    <section>
+      <h2>Contact</h2>
+      <p>Found a bug or have a feature request? Please <a href="https://github.com/esanbock/ITunesToRhythm/issues">open an issue on GitHub</a>. The source lives at <a href="https://github.com/esanbock/ITunesToRhythm">github.com/esanbock/ITunesToRhythm</a>.</p>
+    </section>
 
-<p>Copy statistics from RhythmBox to an Amarok mysql database,
-excluding ratings:</p>
-
-<command>iTunesToRhythm.py --noratings -a
-~/.local/share/rhythmbox/rhythmdb.xml mysql -s musicserver -d amarok -u
-amarokuser -p verysecret<br>
-</command><br>
-
-Copy ratings and playcounts from Amarok to itunes on a Mac<br>
-
-<command>iTunesToRhythm.py mysql -s musicserver -d amarok -u
-amarokuser -p verysecret itunes</command>
-<br>
-
-<h4>Usage:<br>
-</h4>
-
-<code>Usage: iTunesToRhythm [options] &lt;inputfile&gt;|mysql|itunes|wmp
-&lt;outputfile&gt;|mysql|itunes|wmp<br>
-<br>
-Options:<br>
-&nbsp; -h, --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-show this help message and exit<br>
-&nbsp; -c, --confirm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; confirm every
-match<br>
-&nbsp; -w, --writechanges&nbsp; write changes to destination file<br>
-&nbsp; -a, --disambiguate&nbsp; prompt user to resolve ambiguities<br>
-&nbsp; -l, --fastandloose&nbsp; ignore differences in file names when a
-file size match
-is made against a single song. Will not resolve multiple matches<br>
-&nbsp; --noplaycounts&nbsp; do not update play counts<br>
-&nbsp; --noratings&nbsp; do not update ratings<br>
-<br>
-&nbsp; Amarok connection options:<br>
-&nbsp;&nbsp; Options for connecting to an Amarok MySQL remote database <br>
-<br>
-&nbsp;&nbsp; -s SERVERNAME, --server=SERVERNAME<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; host name of the MySQL database server <br>
-&nbsp;&nbsp; -d DATABASE, --database=DATABASE<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; database name of the amarok database<br>
-&nbsp;&nbsp; -u USERNAME, --username=USERNAME<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; login name of the amarok database<br>
-&nbsp;&nbsp; -p PASSWORD, --password=PASSWORD<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password of the user<br>
-</code>
-<br>
-
-Speciifying "itunes" will attempt to use a running iTunes instance for
-synchronization (Mac Only)<br>
-
-<br>
-
-<span style="font-weight: bold;">Roadmap:</span>
-
-
-<ol>
-
-  <li>Add support for Windows Media Player</li>
-  <li>Continuous synchronization between supported players (based on
-playcount)</li>
-  <li>Playlist synchronization<br>
-  </li>
-
-</ol>
-
-<span style="font-weight: bold;">Contact info:</span><br>
-
-<ul>
-
-  <li>Bug reports should be emailed to webmaster@esanbock.com</li>
-</ul>
-
-<br>
-
-<script type="text/javascript"><!--
-google_ad_client = "pub-2377136359999276";
-/* 728x90, created 2/21/09 */
-google_ad_slot = "4415893889";
-google_ad_width = 728;
-google_ad_height = 90;
-//-->
-</script>
-<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script><br>
-
-<br>
-
-
-</body></html>
+    <footer>
+      iTunesToRhythm &middot; a little piece of insanity for keeping your music stats in sync.
+    </footer>
+  </div>
+</body>
+</html>
