@@ -186,32 +186,42 @@
       <h2>Prerequisites</h2>
       <ul>
         <li>Rhythmbox, Amarok, Windows Media Player, or iTunes</li>
-        <li>Python</li>
-        <li>libxml2</li>
-        <li>python-libxml2 (Python bindings for libxml2)</li>
-        <li>MySQLdb Python bindings <em>(if using Amarok)</em></li>
-        <li>pywin32 <em>(if using Windows Media Player)</em></li>
-        <li>appscript <em>(if using iTunes on a Mac)</em></li>
+        <li>Python 3</li>
+        <li>lxml</li>
+        <li>pyobjc-framework-ScriptingBridge <em>(if using iTunes / Music on a Mac)</em></li>
+        <li>pywin32 <em>(if using iTunes on Windows or Windows Media Player)</em></li>
+        <li>mysqlclient <em>(if using Amarok)</em></li>
+        <li>rleveldb <em>(if using Amazon Music)</em></li>
       </ul>
-      <div class="note">
-        If you are running a desktop distribution of Linux (such as Ubuntu), you probably already have most of these installed.
-      </div>
+      <p><code>pip install -r requirements.txt</code> installs lxml plus the iTunes / Windows Media Player packages for your platform. The Amarok and Amazon Music packages are optional; uncomment them in <code>requirements.txt</code> or install them directly.</p>
     </section>
 
     <section>
       <h2>Execution</h2>
       <ol>
-        <li>Download and extract <a href="iTunesToRhythm.tar.bz2">iTunesToRhythm.tar.bz2</a>.</li>
+        <li>
+          Get the code and install the dependencies:
+          <pre class="cmd"><code>git clone https://github.com/esanbock/ITunesToRhythm.git
+cd ITunesToRhythm
+pip install -r requirements.txt</code></pre>
+        </li>
         <li>Move, copy, or mount all your music where RhythmBox or Amarok can find it (the folder structure doesn't matter).</li>
-        <li>Import all your music into your new player (Amarok or RhythmBox).</li>
+        <li>Import all your music into your new player (Amarok or RhythmBox), then close RhythmBox so it doesn't overwrite the database when it exits.</li>
         <li>Copy or mount your <code>iTunes Music Library.xml</code> file to Linux if copying from iTunes. If going to or from Amarok or RhythmBox, skip this step.</li>
         <li>
-          Run the following command:
-          <pre class="cmd"><code>iTunesToRhythm.py <span class="flag">-w -a</span> ITunes\ Music\ Library.xml ~/.local/share/rhythmbox/rhythmdb.xml</code></pre>
+          Do a dry run and review the output:
+          <pre class="cmd"><code>python iTunesToRhythm.py <span class="flag">-a</span> "iTunes Music Library.xml" ~/.local/share/rhythmbox/rhythmdb.xml</code></pre>
+        </li>
+        <li>
+          Run it again with <code>-w</code> to save the changes:
+          <pre class="cmd"><code>python iTunesToRhythm.py <span class="flag">-w -a</span> "iTunes Music Library.xml" ~/.local/share/rhythmbox/rhythmdb.xml</code></pre>
         </li>
         <li>Manually resolve any ambiguities you are prompted for.</li>
         <li>Enjoy your music.</li>
       </ol>
+      <div class="note">
+        <strong>Nothing is written unless you pass <code>-w</code>.</strong> Without it the tool only reports what it would change. Back up your library files before writing to them.
+      </div>
       <div class="note">
         On a Mac, iTunes is supported directly by using <code>itunes</code> as the source or destination — so you could, for example, import from Amarok straight into iTunes. On Windows, Windows Media Player is supported by using <code>wmp</code> as the source or destination.
       </div>
@@ -222,12 +232,17 @@
 
       <div class="example">
         <p>Copy statistics from RhythmBox to an Amarok MySQL database, excluding ratings:</p>
-        <pre class="cmd"><code>iTunesToRhythm.py <span class="flag">--noratings -a</span> ~/.local/share/rhythmbox/rhythmdb.xml mysql <span class="flag">-s</span> musicserver <span class="flag">-d</span> amarok <span class="flag">-u</span> amarokuser <span class="flag">-p</span> verysecret</code></pre>
+        <pre class="cmd"><code>python iTunesToRhythm.py <span class="flag">-w --noratings -a</span> ~/.local/share/rhythmbox/rhythmdb.xml mysql <span class="flag">-s</span> musicserver <span class="flag">-d</span> amarok <span class="flag">-u</span> amarokuser <span class="flag">-p</span> verysecret</code></pre>
       </div>
 
       <div class="example">
         <p>Copy ratings and playcounts from Amarok to iTunes on a Mac:</p>
-        <pre class="cmd"><code>iTunesToRhythm.py mysql <span class="flag">-s</span> musicserver <span class="flag">-d</span> amarok <span class="flag">-u</span> amarokuser <span class="flag">-p</span> verysecret itunes</code></pre>
+        <pre class="cmd"><code>python iTunesToRhythm.py <span class="flag">-w</span> mysql <span class="flag">-s</span> musicserver <span class="flag">-d</span> amarok <span class="flag">-u</span> amarokuser <span class="flag">-p</span> verysecret itunes</code></pre>
+      </div>
+
+      <div class="example">
+        <p>Sync iTunes and Windows Media Player both ways on Windows:</p>
+        <pre class="cmd"><code>python iTunesToRhythm.py <span class="flag">-w --twoway</span> itunes wmp</code></pre>
       </div>
     </section>
 
@@ -262,7 +277,7 @@ Options:
     -p PASSWORD, --password=PASSWORD
                        password of the user</code></pre>
       <div class="note">
-        Specifying <code>itunes</code> uses a running iTunes instance for synchronization — on macOS (via appscript) or on Windows (via the iTunes COM API). Use <code>wmp</code> for Windows Media Player and <code>amazonmusic</code> to read from Amazon Music.
+        Specifying <code>itunes</code> uses a running iTunes instance for synchronization — on macOS (the Music app, or iTunes on older systems, via ScriptingBridge) or on Windows (via the iTunes COM API). Use <code>wmp</code> for Windows Media Player and <code>amazonmusic</code> to read from Amazon Music.
       </div>
     </section>
 
@@ -279,6 +294,13 @@ Options:
         <li><strong>Amazon Music</strong> — read only, used as a source (<code>amazonmusic</code>). Best-effort: it scrapes the Amazon Music desktop app's local cache (Windows only), so it sees only cached tracks and can break when the app changes.</li>
       </ul>
       <p>Two-way synchronization is available with the <code>--twoway</code> flag, which gives precedence to the copy with the higher play count.</p>
+    </section>
+
+    <section>
+      <h2>Development</h2>
+      <p>The tests use only the Python standard library and small sample libraries, so they never touch your real music libraries:</p>
+      <pre class="cmd"><code>python -m unittest discover -s tests</code></pre>
+      <p>Code is formatted with <a href="https://black.readthedocs.io/">Black</a> (settings in <code>pyproject.toml</code>): <code>python -m black .</code></p>
     </section>
 
     <section>
