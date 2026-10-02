@@ -81,12 +81,12 @@ def main(argv):
                         print("\t\t\tRating changed to " + str(source.rating))
                     if not options.noplaycounts:
                         if destination.playcount != source.playcount:
-                            destination.setPlaycount(match.playcount)
+                            destination.setPlaycount(source.playcount)
                             print("\t\t\tPlay count changed to " + str(source.playcount))
                     if options.dateadded:
                         if destination.dateadded is not None and source.dateadded is not None:
                             if destination.dateadded != source.dateadded:
-                                destination.setDateAdded(match.dateadded)
+                                destination.setDateAdded(source.dateadded)
                                 print("\t\t\tDate added changed to " + str(source.dateadded))
 
     # dump summary results

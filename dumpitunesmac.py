@@ -95,6 +95,8 @@ class iTunesMacParser(BaseLibraryParser):
         # Talks to the running app rather than parsing a library file, so the
         # base class constructor (which loads an XML file) is not called
         self.location = location
+        # Cache for songs to avoid reloading
+        self._songs_cache = None
 
         # Check if ScriptingBridge is available
         if ScriptingBridge is None:
@@ -115,9 +117,6 @@ class iTunesMacParser(BaseLibraryParser):
         except Exception as e:
             print(f"Error initializing {self.app_name} app: {e}")
             self.music_app = None
-        
-        # Cache for songs to avoid reloading
-        self._songs_cache = None
 
     def getSongs(self):
         # Return cached songs if available
