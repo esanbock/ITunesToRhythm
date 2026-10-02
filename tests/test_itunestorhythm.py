@@ -124,6 +124,23 @@ class MainTest(TempLibraryTestCase):
         runMain("-w", "--dateadded", self.itunesPath, self.rhythmPath)
         self.assertEqual(self.rhythmSongs()["Song A"].dateadded, self.itunesSongs()["Song A"].dateadded)
 
+    def test_playdate_not_copied_without_option(self):
+        runMain("-w", self.itunesPath, self.rhythmPath)
+        self.assertEqual(self.rhythmSongs()["Song A"].playdate, 1301792996)
+
+    def test_playdate_itunes_to_rhythmbox(self):
+        runMain("-w", "--playdate", self.itunesPath, self.rhythmPath)
+        songs = self.rhythmSongs()
+        self.assertEqual(songs["Song A"].playdate, self.itunesSongs()["Song A"].playdate)
+        # the source copy of Twin Two was never played, so its date is kept
+        self.assertEqual(songs["Twin Two"].playdate, 1400000000)
+
+    def test_playdate_rhythmbox_to_itunes(self):
+        runMain("-w", "--playdate", self.rhythmPath, self.itunesPath)
+        songs = self.itunesSongs()
+        self.assertEqual(songs["Song A"].playdate, 1301792996)
+        self.assertEqual(songs["Twin Two"].playdate, 1400000000)
+
     def test_twoway_copies_higher_playcount_back_to_source(self):
         with quiet():
             parser = RhythmLibraryParser(self.rhythmPath)

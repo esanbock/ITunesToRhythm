@@ -67,6 +67,7 @@ For every song in the destination, the tool looks for the matching song in the s
 | `--noplaycounts` | Don't update play counts |
 | `--twoway` | Sync both directions; for each song, the copy with the higher play count wins |
 | `--dateadded` | Also copy the "date added" field (iTunes to Rhythmbox only) |
+| `--playdate` | Also copy the "last played" date (between iTunes library files and Rhythmbox only) |
 
 Amarok connection options, used with `mysql`:
 

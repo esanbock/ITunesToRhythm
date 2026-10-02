@@ -93,6 +93,11 @@ def main(argv):
                             if destination.dateadded != source.dateadded:
                                 destination.setDateAdded(source.dateadded)
                                 print("\t\t\tDate added changed to " + str(source.dateadded))
+                    if options.playdate:
+                        # a never-played source song (playdate 0) must not erase the destination's date
+                        if source.playdate and destination.playdate != source.playdate:
+                            destination.setPlayDate(source.playdate)
+                            print("\t\t\tLast played changed to " + str(source.playdate))
 
     # dump summary results
     print("\nSummary\n------------------------------------")
@@ -214,6 +219,13 @@ def processCommandLine(argv):
         dest="dateadded",
         default=False,
         help="update dates (only iTunes to Rhythmbox on Linux)",
+    )
+    parser.add_option(
+        "--playdate",
+        action="store_true",
+        dest="playdate",
+        default=False,
+        help="update last played dates (only between iTunes library files and Rhythmbox)",
     )
     parser.add_option(
         "--useSongTitle",

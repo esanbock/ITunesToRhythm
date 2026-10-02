@@ -15,6 +15,7 @@
 # along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+import calendar
 import sys
 import time
 import os
@@ -54,6 +55,7 @@ class iTunesSong(BaseSong):
         except IndexError:
             self.filePath = ""
         self.dateadded = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Date Added']")
+        self.playdate = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Play Date UTC']")
 
         if len(self.artist) == 0:
             self.artist = "Unknown"
@@ -85,6 +87,12 @@ class iTunesSong(BaseSong):
         else:
             # http://www.epochconverter.com/
             self.dateadded = int(time.mktime(time.strptime(self.dateadded[0].content, "%Y-%m-%dT%H:%M:%SZ")))
+
+        if len(self.playdate) == 0:
+            self.playdate = 0
+        else:
+            # 'Play Date UTC' is UTC, so convert with timegm to a Unix epoch
+            self.playdate = calendar.timegm(time.strptime(self.playdate[0].content, "%Y-%m-%dT%H:%M:%SZ"))
 
     def setRating(self, rating):
         ratingValueNodes = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Rating'][1]")
@@ -130,6 +138,20 @@ class iTunesSong(BaseSong):
         # round-trips through time.strptime('%Y-%m-%dT%H:%M:%SZ') correctly.
         isoDate = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.localtime(int(dateadded)))
         dateaddedValueNode.setContent(isoDate)
+
+    def setPlayDate(self, playdate):
+        playdateValueNodes = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Play Date UTC'][1]")
+        if len(playdateValueNodes) == 0:
+            newPlaydateKeyNode = libxml2.newNode("key")
+            self.xmlNode.addChild(newPlaydateKeyNode)
+            newPlaydateKeyNode.setContent("Play Date UTC")
+            playdateValueNode = libxml2.newNode("date")
+            newPlaydateKeyNode.addSibling(playdateValueNode)
+        else:
+            playdateValueNode = playdateValueNodes[0]
+
+        # playdate is a Unix epoch; iTunes stores it as an ISO-8601 UTC date
+        playdateValueNode.setContent(time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(int(playdate))))
 
 
 class iTunesLibraryParser(BaseLibraryParser):

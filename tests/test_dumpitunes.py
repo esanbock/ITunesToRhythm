@@ -1,3 +1,4 @@
+import calendar
 import time
 import unittest
 
@@ -31,6 +32,9 @@ class ITunesReadTest(unittest.TestCase):
         self.assertEqual(song.filePath, "file://localhost/music/song_a.mp3")
         self.assertEqual(song.dateadded, int(time.mktime(time.strptime("2010-01-15T12:00:00Z", "%Y-%m-%dT%H:%M:%SZ"))))
 
+    def test_play_date_is_read_as_utc_epoch(self):
+        self.assertEqual(self.songs["Song A"].playdate, calendar.timegm((2015, 12, 4, 20, 52, 19)))
+
     def test_missing_fields_get_defaults(self):
         song = self.songs["Song B"]
         self.assertEqual(song.album, "Unknown")
@@ -38,6 +42,7 @@ class ITunesReadTest(unittest.TestCase):
         self.assertEqual(song.playcount, 0)
         self.assertEqual(song.filePath, "")
         self.assertEqual(song.dateadded, 0)
+        self.assertEqual(song.playdate, 0)
 
     def test_findSongBySize_returns_every_match(self):
         parser = loadParser(ITUNES_FIXTURE)
@@ -81,6 +86,23 @@ class ITunesWriteTest(TempLibraryTestCase):
         saved = self.reload(parser)
         self.assertEqual(saved["Song A"].dateadded, epoch)
         self.assertEqual(saved["Song B"].dateadded, epoch)
+
+    def test_playdate_round_trips(self):
+        parser = loadParser(self.itunesPath)
+        songs = songsByTitle(parser)
+        songs["Song A"].setPlayDate(1400000000)
+        songs["Song B"].setPlayDate(1500000000)
+        saved = self.reload(parser)
+        self.assertEqual(saved["Song A"].playdate, 1400000000)
+        self.assertEqual(saved["Song B"].playdate, 1500000000)
+
+    def test_playdate_is_written_as_iso_utc_date(self):
+        parser = loadParser(self.itunesPath)
+        songsByTitle(parser)["Song B"].setPlayDate(1500000000)
+        with quiet():
+            parser.save()
+        with open(self.itunesPath, encoding="utf-8") as f:
+            self.assertIn("<date>2017-07-14T02:40:00Z</date>", f.read())
 
 
 if __name__ == "__main__":
