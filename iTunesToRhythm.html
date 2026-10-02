@@ -293,7 +293,7 @@ Options:
         <li><strong>RhythmBox</strong> — read &amp; write (pass the <code>rhythmdb.xml</code> path)</li>
         <li><strong>Amarok</strong> — read &amp; write, via its MySQL database (<code>mysql</code>)</li>
         <li><strong>Windows Media Player</strong> — read &amp; write (<code>wmp</code>)</li>
-        <li><strong>Amazon Music</strong> — read only, used as a source (<code>amazonmusic</code>). Best-effort: it scrapes the Amazon Music desktop app's local cache (Windows only), so it sees only cached tracks and can break when the app changes.</li>
+        <li><strong>Amazon Music</strong> — read only, used as a source (<code>amazonmusic</code>). Best-effort: it scrapes the Amazon Music desktop app's local cache (Windows only), so it sees only cached tracks and can break when the app changes. It has no file sizes, so songs are matched by title automatically.</li>
       </ul>
       <p>Two-way synchronization is available with the <code>--twoway</code> flag, which gives precedence to the copy with the higher play count.</p>
     </section>

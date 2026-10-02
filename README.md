@@ -120,7 +120,7 @@ python iTunesToRhythm.py -w --twoway itunes wmp
 ## Notes and limitations
 
 - **Matching by file size** works well when both players point at the same audio files. If the files were re-encoded or re-tagged, try `--useSongTitle`.
-- **Amazon Music** support is best-effort and Windows-only. It reads the Amazon Music desktop app's local cache, so it sees only cached tracks and can break when the app changes. It has no file sizes, so use `--useSongTitle` with it.
+- **Amazon Music** support is best-effort and Windows-only. It reads the Amazon Music desktop app's local cache, so it sees only cached tracks and can break when the app changes. It has no file sizes, so songs are matched by title automatically.
 - Close Rhythmbox before writing to `rhythmdb.xml`, or it may overwrite your changes when it exits.
 
 ## Standalone dump scripts
