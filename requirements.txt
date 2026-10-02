@@ -1,7 +1,12 @@
-pip==22.3.1
-setuptools==65.5.1
-wheel==0.38.4
-pyobjc-framework-ScriptingBridge>=9.0
-# XML parsing libraries - either one can be used
+# XML parsing (iTunes XML and Rhythmbox libraries)
 lxml>=4.9.0
-libxml2-python>=2.9.0; platform_system != "Windows"  # libxml2 is not easily available on Windows
+
+# iTunes / Music app on macOS
+pyobjc-framework-ScriptingBridge>=9.0; sys_platform == "darwin"
+
+# iTunes and Windows Media Player on Windows
+pywin32; sys_platform == "win32"
+
+# Optional backends - uncomment the ones you need
+# mysqlclient       # Amarok (MySQL)
+# rleveldb          # Amazon Music (Windows)

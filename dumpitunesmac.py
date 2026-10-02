@@ -57,18 +57,17 @@ class BaseLibraryParser(object):
     def save(self):
         pass
 
-# Check if we're on macOS
-if platform.system() == "Darwin":
-    # Import ScriptingBridge directly without Foundation
-    try:
-        import ScriptingBridge
-    except ImportError:
+# ScriptingBridge only exists on macOS; iTunesMacParser reports it if missing
+try:
+    import ScriptingBridge
+except ImportError:
+    if platform.system() == "Darwin":
         print("ScriptingBridge module not found. This is required for Mac integration.")
         print("Try installing pyobjc-framework-ScriptingBridge with pip in a virtual environment:")
         print("python3 -m venv venv")
         print("source venv/bin/activate")
         print("pip install -r requirements.txt")
-        ScriptingBridge = None
+    ScriptingBridge = None
 
 class iTunesMacSong(BaseSong):
     def __init__(self, track):
@@ -132,7 +131,7 @@ class iTunesMacParser(BaseLibraryParser):
         super().__init__(location)
         
         # Check if ScriptingBridge is available
-        if 'ScriptingBridge' not in globals() or ScriptingBridge is None:
+        if ScriptingBridge is None:
             print("ScriptingBridge is not available. Mac integration will not work.")
             self.music_app = None
             return

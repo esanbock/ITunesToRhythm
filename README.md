@@ -25,24 +25,22 @@ File inputs are detected automatically: an iTunes XML library or a Rhythmbox `rh
 
 Extra packages are needed only for the backends you use:
 
-| Backend | Package |
-| --- | --- |
-| iTunes on macOS | `pyobjc-framework-ScriptingBridge` |
-| iTunes on Windows, Windows Media Player | `pywin32` |
-| Amarok | `mysqlclient` (provides `MySQLdb`) |
-| Amazon Music | `rleveldb` |
+| Backend | Package | Installed by `requirements.txt` |
+| --- | --- | --- |
+| iTunes on macOS | `pyobjc-framework-ScriptingBridge` | Yes, on macOS |
+| iTunes on Windows, Windows Media Player | `pywin32` | Yes, on Windows |
+| Amarok | `mysqlclient` (provides `MySQLdb`) | No, optional |
+| Amazon Music | `rleveldb` | No, optional |
 
 ## Installation
 
 ```sh
 git clone https://github.com/esanbock/ITunesToRhythm.git
 cd ITunesToRhythm
-pip install lxml
-# then add whichever backend packages you need, for example:
-pip install pywin32
+pip install -r requirements.txt
 ```
 
-`requirements.txt` lists the full set of dependencies, but it includes macOS-only packages, so on other platforms install just what you need.
+This installs lxml plus the iTunes/WMP packages for your platform. The Amarok and Amazon Music packages are optional; uncomment them in `requirements.txt` (or `pip install` them directly) if you need them.
 
 ## Usage
 

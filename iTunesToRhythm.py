@@ -18,11 +18,6 @@
 
 import sys
 import platform
-
-if platform.system() == "Darwin":
-    # sys.path.append('/sw/lib/python2.5/site-packages/')
-    from dumpitunesmac import iTunesMacParser, iTunesMacSong
-
 import linecache
 from optparse import OptionParser, OptionGroup
 
@@ -134,6 +129,7 @@ def getParser(file_, options):
             return iTunesWinParser()
         else:
             print("\tassuming itunes on the mac")
+            from dumpitunesmac import iTunesMacParser
             return iTunesMacParser()
     if file_ == "wmp":
         print("\tassuming Windows Media Player")
