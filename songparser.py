@@ -16,16 +16,6 @@
 #along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
 #51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-# Try to import the native libxml2 bindings, falling back to the lxml-based
-# adapter when they are unavailable. Any failure from the adapter (e.g. lxml
-# also missing) is allowed to propagate: this module is imported by the main
-# iTunesToRhythm program, so errors must reach the caller rather than being
-# swallowed here.
-try:
-    import libxml2
-except ImportError:
-    import libxml2_adapter as libxml2
-
 class BaseSong(object):
     def __init__(self, song):
         self.artist = "Unknown"
@@ -39,6 +29,16 @@ class BaseSong(object):
 
 class BaseLibraryParser(object):
     def __init__(self, location):
+        # Imported here rather than at module level so backends that never
+        # parse an XML file (e.g. iTunes on macOS) can use these base classes
+        # without an XML library installed. Try the native libxml2 bindings,
+        # falling back to the lxml-based adapter; any failure from the adapter
+        # (e.g. lxml also missing) propagates to the caller.
+        try:
+            import libxml2
+        except ImportError:
+            import libxml2_adapter as libxml2
+
         print("Loading file " + location)
         self.location = location
         self.doc = libxml2.parseFile(location)

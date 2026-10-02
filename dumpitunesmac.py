@@ -19,43 +19,7 @@ import sys
 import platform
 import os
 
-# Define our own BaseSong and BaseLibraryParser classes to avoid libxml2 dependency
-class BaseSong(object):
-    def __init__(self, song):
-        self.artist = "Unknown"
-        self.album = "Unknown"
-        self.title = "Unknown"
-        self.size = "Unknown"
-        self.rating = 0
-        self.playcount = 0
-        self.filePath = ""
-        self.dateadded = 0
-
-class BaseLibraryParser(object):
-    def __init__(self, location):
-        self.location = location
-
-    def getSongs(self):
-        raise NotImplementedError("Must override this method in a subclass")
-
-    def findSongBySize(self, size):
-        results = []
-        allSongs = self.getSongs()
-        for song in allSongs:
-            if song.size == size:
-                results.append(song)
-                return results
-
-    def findSongByTitle(self, title):
-        results = []
-        allSongs = self.getSongs()
-        for song in allSongs:
-            if song.title == title:
-                results.append(song)
-                return results
-
-    def save(self):
-        pass
+from songparser import BaseSong, BaseLibraryParser
 
 # ScriptingBridge only exists on macOS; iTunesMacParser reports it if missing
 try:
@@ -128,8 +92,10 @@ class iTunesMacSong(BaseSong):
 
 class iTunesMacParser(BaseLibraryParser):
     def __init__(self, location=None):
-        super().__init__(location)
-        
+        # Talks to the running app rather than parsing a library file, so the
+        # base class constructor (which loads an XML file) is not called
+        self.location = location
+
         # Check if ScriptingBridge is available
         if ScriptingBridge is None:
             print("ScriptingBridge is not available. Mac integration will not work.")
@@ -204,6 +170,10 @@ class iTunesMacParser(BaseLibraryParser):
         except Exception as e:
             print(f"Error getting all tracks: {e}")
             return []
+
+    def save(self):
+        # Changes are applied to the running app immediately
+        pass
 
     def getPlaylistFiles(self, playlistName):
         # This method is kept for compatibility but not used anymore
