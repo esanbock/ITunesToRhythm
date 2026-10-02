@@ -51,8 +51,9 @@ def main(argv):
             print("*** UNICODE *** ")
         if song.size is not None and song.size != "Unknown":
             # find equivalent itunes song
-            match = correlator.correlateSong(song, options.confirm, options.fastAndLoose, options.useSongTitle,
-                                             options.promptForDisambiguate)
+            match = correlator.correlateSong(
+                song, options.confirm, options.fastAndLoose, options.useSongTitle, options.promptForDisambiguate
+            )
             # calculate if two way
             destination = song
             source = match
@@ -69,8 +70,12 @@ def main(argv):
                             source = None
                             destination = None
                         else:
-                            print("\t\t\tModifying destination " + str(source.playcount) + " vs " + str(
-                                destination.playcount))
+                            print(
+                                "\t\t\tModifying destination "
+                                + str(source.playcount)
+                                + " vs "
+                                + str(destination.playcount)
+                            )
                             outputModifications = outputModifications + 1
                 else:
                     outputModifications = outputModifications + 1
@@ -121,36 +126,43 @@ def getParser(file_, options):
     if file_ == "mysql":
         print("\tassuming amarok database")
         from dumpamarok import AmarokLibraryParser, AmarokSong
+
         return AmarokLibraryParser(options.servername, options.database, options.username, options.password)
     if file_ == "itunes":
-        if platform.system() == 'Windows':
+        if platform.system() == "Windows":
             print("\tassuming itunes on windows")
             from dumpituneswin import iTunesWinParser, iTunesWinSong
+
             return iTunesWinParser()
         else:
             print("\tassuming itunes on the mac")
             from dumpitunesmac import iTunesMacParser
+
             return iTunesMacParser()
     if file_ == "wmp":
         print("\tassuming Windows Media Player")
         from dumpwmp import WMPParser
+
         return WMPParser()
     if file_ == "amazonmusic":
         print("\tassuming Amazon Music")
         from dumpAmazonMusic import AmazonMusicParser
+
         return AmazonMusicParser()
 
     desc = linecache.getline(file_, 2)
-    if desc == '':
+    if desc == "":
         raise IOError("File not found")
     if desc.find("Apple Computer") != -1:
         # open itunes linbrary
         print("\tdetected Itunes library")
         from dumpitunes import iTunesLibraryParser, iTunesSong
+
         return iTunesLibraryParser(file_)
     if desc.find("rhythmdb") != -1:
         print("\tdetected Rhythm box library")
         from dumprhythm import RhythmLibraryParser, RhythmSong
+
         return RhythmLibraryParser(file_)
 
     raise UnrecognizedFormatException(desc)
@@ -158,23 +170,58 @@ def getParser(file_, options):
 
 def processCommandLine(argv):
     parser = OptionParser(
-        "iTunesToRhythm [options] <inputfile>|itunes|mysql|wmp|amazonmusic <outputfile>|mysql|itunes|wmp|amazonmusic")
+        "iTunesToRhythm [options] <inputfile>|itunes|mysql|wmp|amazonmusic <outputfile>|mysql|itunes|wmp|amazonmusic"
+    )
     parser.add_option("-c", "--confirm", action="store_true", dest="confirm", default=False, help="confirm every match")
-    parser.add_option("-w", "--writechanges", action="store_true", dest="writeChanges", default=False,
-                      help="write changes to destination file")
-    parser.add_option("-a", "--disambiguate", action="store_true", dest="promptForDisambiguate", default=False,
-                      help="prompt user to resolve ambiguities")
-    parser.add_option("-l", "--fastandloose", action="store_true", dest="fastAndLoose", default=False,
-                      help="ignore differences in files name when a file size match is made against  a single song.   Will not resolve multiple matches")
-    parser.add_option("--noplaycounts", action="store_true", dest="noplaycounts", default=False,
-                      help="do not update play counts")
+    parser.add_option(
+        "-w",
+        "--writechanges",
+        action="store_true",
+        dest="writeChanges",
+        default=False,
+        help="write changes to destination file",
+    )
+    parser.add_option(
+        "-a",
+        "--disambiguate",
+        action="store_true",
+        dest="promptForDisambiguate",
+        default=False,
+        help="prompt user to resolve ambiguities",
+    )
+    parser.add_option(
+        "-l",
+        "--fastandloose",
+        action="store_true",
+        dest="fastAndLoose",
+        default=False,
+        help="ignore differences in files name when a file size match is made against  a single song.   Will not resolve multiple matches",
+    )
+    parser.add_option(
+        "--noplaycounts", action="store_true", dest="noplaycounts", default=False, help="do not update play counts"
+    )
     parser.add_option("--noratings", action="store_true", dest="noratings", default=False, help="do not update ratings")
-    parser.add_option("--twoway", action="store_true", dest="twoway", default=False,
-                      help="sync up the two files, giving precedence to the items with the higher playcount")
-    parser.add_option("--dateadded", action="store_true", dest="dateadded", default=False,
-                      help="update dates (only iTunes to Rhythmbox on Linux)")
-    parser.add_option("--useSongTitle", action="store_true", dest="useSongTitle", default=False,
-                      help="use song titles instead of file sizes to match songs")
+    parser.add_option(
+        "--twoway",
+        action="store_true",
+        dest="twoway",
+        default=False,
+        help="sync up the two files, giving precedence to the items with the higher playcount",
+    )
+    parser.add_option(
+        "--dateadded",
+        action="store_true",
+        dest="dateadded",
+        default=False,
+        help="update dates (only iTunes to Rhythmbox on Linux)",
+    )
+    parser.add_option(
+        "--useSongTitle",
+        action="store_true",
+        dest="useSongTitle",
+        default=False,
+        help="use song titles instead of file sizes to match songs",
+    )
 
     amarokGroup = OptionGroup(parser, "Amarok options", "Options for connecting to an Amarok MySQL remote database")
     amarokGroup.add_option("-s", "--server", dest="servername", help="host name of the MySQL database server")
@@ -252,7 +299,7 @@ class SongCorrelator(object):
 
         # review
         if confirm:
-            foo = input('press <enter> to continue, Ctrl-C to cancel')
+            foo = input("press <enter> to continue, Ctrl-C to cancel")
 
         # done
         return match

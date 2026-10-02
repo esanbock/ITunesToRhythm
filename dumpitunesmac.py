@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 #
-#Copyright @ 2010 Douglas Esanbock
-#iTunesToRhythm is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 3 of the License, or
-#(at your option) any later version.
+# Copyright @ 2010 Douglas Esanbock
+# iTunesToRhythm is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
 #
-#iTunesToRhythm is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# iTunesToRhythm is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#You should have received a copy of the GNU General Public License
-#along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
-#51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+# You should have received a copy of the GNU General Public License
+# along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
 import platform
@@ -33,41 +33,42 @@ except ImportError:
         print("pip install -r requirements.txt")
     ScriptingBridge = None
 
+
 class iTunesMacSong(BaseSong):
     def __init__(self, track):
         super().__init__(None)
         self.track = track
-        
+
         try:
             self.artist = track.artist() or "Unknown"
         except:
             self.artist = "Unknown"
-            
+
         try:
             self.album = track.album() or "Unknown"
         except:
             self.album = "Unknown"
-            
+
         try:
             self.title = track.name() or "Unknown"
         except:
             self.title = "Unknown"
-            
+
         try:
             self.size = track.size()
         except:
             self.size = 0
-            
+
         try:
             self.rating = track.rating()
         except:
             self.rating = 0
-            
+
         try:
             self.playcount = track.playedCount()
         except:
             self.playcount = 0
-        
+
         # Get file path
         try:
             url = track.location()
@@ -90,6 +91,7 @@ class iTunesMacSong(BaseSong):
         except:
             pass
 
+
 class iTunesMacParser(BaseLibraryParser):
     def __init__(self, location=None):
         # Talks to the running app rather than parsing a library file, so the
@@ -103,17 +105,19 @@ class iTunesMacParser(BaseLibraryParser):
             print("ScriptingBridge is not available. Mac integration will not work.")
             self.music_app = None
             return
-            
+
         # Determine which app to use (iTunes or Music)
         self.app_name = "Music"
-        if int(platform.mac_ver()[0].split('.')[0]) < 10 or \
-           (int(platform.mac_ver()[0].split('.')[0]) == 10 and int(platform.mac_ver()[0].split('.')[1]) < 15):
+        if int(platform.mac_ver()[0].split(".")[0]) < 10 or (
+            int(platform.mac_ver()[0].split(".")[0]) == 10 and int(platform.mac_ver()[0].split(".")[1]) < 15
+        ):
             self.app_name = "iTunes"
-            
+
         # Initialize the ScriptingBridge connection
         try:
             self.music_app = ScriptingBridge.SBApplication.applicationWithBundleIdentifier_(
-                f"com.apple.{self.app_name.lower()}")
+                f"com.apple.{self.app_name.lower()}"
+            )
         except Exception as e:
             print(f"Error initializing {self.app_name} app: {e}")
             self.music_app = None
@@ -122,34 +126,34 @@ class iTunesMacParser(BaseLibraryParser):
         # Return cached songs if available
         if self._songs_cache is not None:
             return self._songs_cache
-            
+
         # Check if ScriptingBridge is available
         if self.music_app is None:
             print("Music app is not available. Cannot get songs.")
             return []
-            
+
         try:
             # Make sure the Music/iTunes app is running
             self.music_app.activate()
-            
+
             # Get all sources
             sources = self.music_app.sources()
             if not sources or len(sources) == 0:
                 print("No sources found in Music app")
                 return []
-            
+
             # Get the library source (usually the first one)
             library = sources[0]
-            
+
             # Try a more direct approach - get all file tracks from the application
             print("Getting all file tracks directly...")
             songs = []
-            
+
             # Get all tracks from the application
             try:
                 # Try to get all tracks from the application
                 all_tracks = self.music_app.tracks()
-                
+
                 # Process each track
                 for track in all_tracks:
                     try:
@@ -161,11 +165,11 @@ class iTunesMacParser(BaseLibraryParser):
                         continue
             except Exception as e:
                 print(f"Error getting tracks: {e}")
-            
+
             # Cache the songs
             self._songs_cache = songs
             return songs
-            
+
         except Exception as e:
             print(f"Error getting all tracks: {e}")
             return []
@@ -178,12 +182,15 @@ class iTunesMacParser(BaseLibraryParser):
         # This method is kept for compatibility but not used anymore
         return []
 
+
 def main(argv):
-    print(f"Reading from {'iTunes' if platform.mac_ver()[0].split('.')[0] < '10.15' else 'Music'} running on Mac (ScriptingBridge)")
-    
+    print(
+        f"Reading from {'iTunes' if platform.mac_ver()[0].split('.')[0] < '10.15' else 'Music'} running on Mac (ScriptingBridge)"
+    )
+
     try:
         parser = iTunesMacParser(None)
-        
+
         # Always use getSongs() to read all songs without processing playlists
         allSongs = parser.getSongs()
 
@@ -195,6 +202,7 @@ def main(argv):
         print(f"Error: {e}")
         print("Make sure you have granted automation permissions to your terminal/IDE application.")
         print("Go to System Preferences > Security & Privacy > Privacy > Automation and enable access.")
+
 
 if __name__ == "__main__":
     main(sys.argv)

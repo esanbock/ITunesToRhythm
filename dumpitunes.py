@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 #
-#Copyright @ 2010 Douglas Esanbock
-#iTunesToRhythm is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 3 of the License, or
-#(at your option) any later version.
+# Copyright @ 2010 Douglas Esanbock
+# iTunesToRhythm is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
 #
-#iTunesToRhythm is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# iTunesToRhythm is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#You should have received a copy of the GNU General Public License
-#along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
-#51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+# You should have received a copy of the GNU General Public License
+# along with iTunesToRhythm; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 import sys
 import time
@@ -38,6 +38,7 @@ except ImportError:
         raise
 
 from songparser import BaseSong, BaseLibraryParser
+
 
 class iTunesSong(BaseSong):
     def __init__(self, songNode):
@@ -82,11 +83,10 @@ class iTunesSong(BaseSong):
         if len(self.dateadded) == 0:
             self.dateadded = 0
         else:
-        #http://www.epochconverter.com/
-            self.dateadded = int(time.mktime(time.strptime(self.dateadded[0].content, '%Y-%m-%dT%H:%M:%SZ')))
+            # http://www.epochconverter.com/
+            self.dateadded = int(time.mktime(time.strptime(self.dateadded[0].content, "%Y-%m-%dT%H:%M:%SZ")))
 
-
-    def setRating(self,  rating):
+    def setRating(self, rating):
         ratingValueNodes = self.xmlNode.xpathEval("integer[preceding-sibling::* = 'Rating'][1]")
         if len(ratingValueNodes) == 0:
             newRatingKeyNode = libxml2.newNode("key")
@@ -128,8 +128,9 @@ class iTunesSong(BaseSong):
         # The constructor stores dateadded as an epoch int (via time.mktime).
         # Write it back in the same ISO-8601 form iTunes uses so a later read
         # round-trips through time.strptime('%Y-%m-%dT%H:%M:%SZ') correctly.
-        isoDate = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(int(dateadded)))
+        isoDate = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.localtime(int(dateadded)))
         dateaddedValueNode.setContent(isoDate)
+
 
 class iTunesLibraryParser(BaseLibraryParser):
     def getSongs(self):
@@ -144,12 +145,13 @@ class iTunesLibraryParser(BaseLibraryParser):
             matchingsongs.append(song)
         return matchingsongs
 
+
 def main(argv):
     if len(argv) < 2:
         # Try to find iTunes Music Library.xml in the default location
         home_dir = os.path.expanduser("~")
         default_path = os.path.join(home_dir, "Music", "iTunes", "iTunes Music Library.xml")
-        
+
         if os.path.exists(default_path):
             location = default_path
             print(f"Using default iTunes library at {location}")
@@ -160,20 +162,21 @@ def main(argv):
             return
     else:
         location = argv[1]
-        
+
     # Check if file exists
     if not os.path.exists(location):
         print(f"Error: File '{location}' does not exist.")
         return
-        
+
     print("Reading iTunes library from " + location)
     parser = iTunesLibraryParser(location)
     allSongs = parser.getSongs()
     print(f"Found {len(allSongs)} songs")
-    
+
     # Print all songs
     for i, song in enumerate(allSongs):
         print(f"{i+1}. {song.artist} - {song.album} - {song.title} - {song.size}")
+
 
 if __name__ == "__main__":
     main(sys.argv)

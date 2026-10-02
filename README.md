@@ -139,6 +139,8 @@ The tests use only the standard library and small sample libraries in `tests/fix
 python -m unittest discover -s tests
 ```
 
+Code is formatted with [Black](https://black.readthedocs.io/) (settings in `pyproject.toml`): `python -m black .`
+
 ## License
 
 GNU General Public License v3. See [LICENSE.txt](LICENSE.txt).
