@@ -85,8 +85,8 @@ class iTunesSong(BaseSong):
         if len(self.dateadded) == 0:
             self.dateadded = 0
         else:
-            # http://www.epochconverter.com/
-            self.dateadded = int(time.mktime(time.strptime(self.dateadded[0].content, "%Y-%m-%dT%H:%M:%SZ")))
+            # 'Date Added' is UTC, so convert with timegm to a Unix epoch
+            self.dateadded = calendar.timegm(time.strptime(self.dateadded[0].content, "%Y-%m-%dT%H:%M:%SZ"))
 
         if len(self.playdate) == 0:
             self.playdate = 0
@@ -133,11 +133,8 @@ class iTunesSong(BaseSong):
         else:
             dateaddedValueNode = dateaddedValueNodes[0]
 
-        # The constructor stores dateadded as an epoch int (via time.mktime).
-        # Write it back in the same ISO-8601 form iTunes uses so a later read
-        # round-trips through time.strptime('%Y-%m-%dT%H:%M:%SZ') correctly.
-        isoDate = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.localtime(int(dateadded)))
-        dateaddedValueNode.setContent(isoDate)
+        # dateadded is a Unix epoch; iTunes stores it as an ISO-8601 UTC date
+        dateaddedValueNode.setContent(time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(int(dateadded))))
 
     def setPlayDate(self, playdate):
         playdateValueNodes = self.xmlNode.xpathEval("date[preceding-sibling::* = 'Play Date UTC'][1]")
@@ -155,17 +152,22 @@ class iTunesSong(BaseSong):
 
 
 class iTunesLibraryParser(BaseLibraryParser):
+    supportsDates = True
+
     def getSongs(self):
         allSongNodes = self.xpathContext.xpathEval("/plist/dict/dict/dict/*/..")
         return [iTunesSong(s) for s in allSongNodes]
 
     def findSongBySize(self, size):
-        matches = self.xpathContext.xpathEval("/plist/dict/dict/dict[integer = '" + str(size) + "']")
-        matchingsongs = []
-        for match in matches:
-            song = iTunesSong(match)
-            matchingsongs.append(song)
-        return matchingsongs
+        # Index track nodes by their 'Size' value once, so lookups compare only
+        # the file size (not every integer in the track) without rescanning the
+        # library. Songs are rebuilt from the nodes on each call so they always
+        # reflect the current XML.
+        if not hasattr(self, "_nodesBySize"):
+            self._nodesBySize = {}
+            for node in self.xpathContext.xpathEval("/plist/dict/dict/dict/*/.."):
+                self._nodesBySize.setdefault(iTunesSong(node).size, []).append(node)
+        return [iTunesSong(node) for node in self._nodesBySize.get(str(size), [])]
 
 
 def main(argv):

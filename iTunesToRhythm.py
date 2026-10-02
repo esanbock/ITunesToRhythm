@@ -36,6 +36,12 @@ def main(argv):
     except IOError as badio:
         print("\tUnable to open file. " + str(badio))
         return -2
+    if (options.dateadded or options.playdate) and not (inputParser.supportsDates and destinationParser.supportsDates):
+        print("--dateadded and --playdate only work between iTunes library files and Rhythmbox")
+        return -3
+    if not options.useSongTitle and not inputParser.canMatchBySize:
+        print("\tsource has no file sizes, matching songs by title instead")
+        options.useSongTitle = True
     # retrieve destination songs
     # destinationParser.InitConsole()
     allDestinationSongs = destinationParser.getSongs()
@@ -218,7 +224,7 @@ def processCommandLine(argv):
         action="store_true",
         dest="dateadded",
         default=False,
-        help="update dates (only iTunes to Rhythmbox on Linux)",
+        help="update date added (only between iTunes library files and Rhythmbox)",
     )
     parser.add_option(
         "--playdate",

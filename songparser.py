@@ -31,6 +31,11 @@ class BaseSong(object):
 
 
 class BaseLibraryParser(object):
+    # whether songs carry real file sizes to match on
+    canMatchBySize = True
+    # whether songs can read and write "date added" and "last played"
+    supportsDates = False
+
     def __init__(self, location):
         # Imported here rather than at module level so backends that never
         # parse an XML file (e.g. iTunes on macOS) can use these base classes

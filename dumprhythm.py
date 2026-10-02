@@ -103,6 +103,8 @@ def main(argv):
 
 
 class RhythmLibraryParser(BaseLibraryParser):
+    supportsDates = True
+
     def getSongs(self):
         allSongNodes = self.doc.xpathEval("//entry[@type='song']")
         return [RhythmSong(s) for s in allSongNodes]

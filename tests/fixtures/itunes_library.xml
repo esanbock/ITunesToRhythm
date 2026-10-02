@@ -24,6 +24,7 @@
 		<dict>
 			<key>Track ID</key><integer>102</integer>
 			<key>Size</key><integer>2000002</integer>
+			<key>Total Time</key><integer>1000001</integer>
 			<key>Name</key><string>Song B</string>
 			<key>Artist</key><string>Artist B</string>
 		</dict>

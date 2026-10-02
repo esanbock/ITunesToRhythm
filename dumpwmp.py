@@ -22,6 +22,18 @@ import codecs
 from pywintypes import com_error
 from songparser import BaseSong, BaseLibraryParser
 
+# WMP ratings use the same 0-100 scale as the rest of the program, except that
+# WMP's maximum is 99, so a 5-star rating of 100 must be written as 99
+WMP_MAX_RATING = 99
+
+
+def wmpRatingToStandard(wmpRating):
+    return 100 if wmpRating >= WMP_MAX_RATING else wmpRating
+
+
+def standardRatingToWmp(rating):
+    return min(rating, WMP_MAX_RATING)
+
 
 class WMPSong(BaseSong):
     def __init__(self, WMPSong):
@@ -31,7 +43,7 @@ class WMPSong(BaseSong):
         self.title = WMPSong.name
         self.size = WMPSong.getItemInfo("FileSize")
         try:
-            self.rating = int(WMPSong.getItemInfo("UserRating"))
+            self.rating = wmpRatingToStandard(int(WMPSong.getItemInfo("UserRating")))
         except ValueError:
             print(WMPSong.getItemInfo("UserRating"))
             self.rating = 0
@@ -43,10 +55,10 @@ class WMPSong(BaseSong):
         self.filePath = WMPSong.sourceURL
 
     def setRating(self, rating):
-        self.wmpNode.setItemInfo("UserRating", rating)
+        self.wmpNode.setItemInfo("UserRating", standardRatingToWmp(rating))
 
     def setPlaycount(self, playcount):
-        self.wmpNode.setItemInfo("UserPlaycount", playcount)
+        self.wmpNode.setItemInfo("UserPlayCount", playcount)
 
 
 class WMPParser(BaseLibraryParser):
@@ -56,15 +68,16 @@ class WMPParser(BaseLibraryParser):
         self.cachedSongs = None
 
     def getSongs(self):
-        print("retrieving all songs from wmp...")
         if self.cachedSongs is not None:
             return self.cachedSongs
-        songs = self.wmp.mediaCollection.getAll()
+        print("retrieving all songs from wmp...")
+        # only audio: getAll() also returns playlists, pictures and video
+        songs = self.wmp.mediaCollection.getByAttribute("MediaType", "audio")
         result = []
         try:
-            for s in songs:
-                wmpSong = WMPSong(s)
-                result.append(wmpSong)
+            # index explicitly; iterating the COM collection runs past its end
+            for i in range(songs.count):
+                result.append(WMPSong(songs.Item(i)))
         except com_error as badio:
             print("\t parsing stopped due to error with " + str(len(result)) + " songs")
         self.cachedSongs = result

@@ -52,6 +52,10 @@ class AmazonMusicSong(BaseSong):
 
 
 class AmazonMusicParser:
+    # the cache has no file sizes, so songs can only be matched by title
+    canMatchBySize = False
+    supportsDates = False
+
     def __init__(self, db_path=None):
         self.db_path = db_path or DEFAULT_DB_PATH
         if not os.path.isdir(self.db_path):

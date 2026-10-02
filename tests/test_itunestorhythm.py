@@ -6,6 +6,7 @@ from contextlib import redirect_stderr, redirect_stdout
 from unittest import mock
 
 import iTunesToRhythm
+import songparser
 from dumpitunes import iTunesLibraryParser
 from dumprhythm import RhythmLibraryParser
 from helpers import ITUNES_FIXTURE, RHYTHM_FIXTURE, TempLibraryTestCase, quiet
@@ -155,6 +156,58 @@ class MainTest(TempLibraryTestCase):
         self.assertEqual((rhythmSongA.rating, rhythmSongA.playcount), (40, 10))
         self.assertEqual(summaryValue(output, "input modifications"), 1)
         self.assertIn("Changes were written to source", output)
+
+
+class TitleOnlyParser:
+    """Stands in for a source like Amazon Music: no file sizes, no dates."""
+
+    canMatchBySize = False
+    supportsDates = False
+
+    def __init__(self, songs):
+        self.songs = songs
+
+    def getSongs(self):
+        return self.songs
+
+    def findSongBySize(self, size):
+        raise AssertionError("must not match by size")
+
+    def findSongByTitle(self, title):
+        return [s for s in self.songs if s.title == title]
+
+
+class ParserCapabilityTest(TempLibraryTestCase):
+    def runWithSource(self, source, *args):
+        realGetParser = iTunesToRhythm.getParser
+        fakeGetParser = lambda name, options: source if name == "fake" else realGetParser(name, options)
+        with mock.patch.object(iTunesToRhythm, "getParser", side_effect=fakeGetParser):
+            output = io.StringIO()
+            with mock.patch.object(sys, "argv", ["iTunesToRhythm.py", *args, "fake", self.rhythmPath]):
+                with redirect_stdout(output):
+                    result = iTunesToRhythm.main(sys.argv)
+        return result, output.getvalue()
+
+    def titleOnlySource(self):
+        song = songparser.BaseSong(None)
+        song.title = "Song B"
+        song.rating = 60
+        song.playcount = 2
+        return TitleOnlyParser([song])
+
+    def test_source_without_sizes_falls_back_to_title_matching(self):
+        result, output = self.runWithSource(self.titleOnlySource(), "-w")
+        self.assertIsNone(result)
+        self.assertIn("matching songs by title instead", output)
+        song = songsByTitle(RhythmLibraryParser, self.rhythmPath)["Song B"]
+        self.assertEqual((song.rating, song.playcount), (60, 2))
+
+    def test_date_options_rejected_for_unsupported_players(self):
+        for option in ["--dateadded", "--playdate"]:
+            result, output = self.runWithSource(self.titleOnlySource(), "-w", option)
+            self.assertEqual(result, -3)
+            self.assertIn("only work between iTunes library files and Rhythmbox", output)
+        self.assertEqual(songsByTitle(RhythmLibraryParser, self.rhythmPath)["Song B"].playcount, 0)
 
 
 class CommandLineTest(unittest.TestCase):

@@ -30,7 +30,7 @@ class ITunesReadTest(unittest.TestCase):
         self.assertEqual(song.rating, 80)
         self.assertEqual(song.playcount, 5)
         self.assertEqual(song.filePath, "file://localhost/music/song_a.mp3")
-        self.assertEqual(song.dateadded, int(time.mktime(time.strptime("2010-01-15T12:00:00Z", "%Y-%m-%dT%H:%M:%SZ"))))
+        self.assertEqual(song.dateadded, calendar.timegm((2010, 1, 15, 12, 0, 0)))
 
     def test_play_date_is_read_as_utc_epoch(self):
         self.assertEqual(self.songs["Song A"].playdate, calendar.timegm((2015, 12, 4, 20, 52, 19)))
@@ -48,6 +48,11 @@ class ITunesReadTest(unittest.TestCase):
         parser = loadParser(ITUNES_FIXTURE)
         matches = parser.findSongBySize("3000003")
         self.assertEqual(sorted(s.title for s in matches), ["Twin One", "Twin Two"])
+
+    def test_findSongBySize_ignores_other_integer_fields(self):
+        # Song B's Total Time equals Song A's size
+        parser = loadParser(ITUNES_FIXTURE)
+        self.assertEqual([s.title for s in parser.findSongBySize("1000001")], ["Song A"])
 
     def test_findSongBySize_no_match(self):
         self.assertEqual(loadParser(ITUNES_FIXTURE).findSongBySize("42"), [])
@@ -78,7 +83,7 @@ class ITunesWriteTest(TempLibraryTestCase):
         self.assertEqual(saved.playcount, 9)
 
     def test_dateadded_round_trips(self):
-        epoch = int(time.mktime((2012, 1, 20, 8, 30, 0, 0, 0, -1)))
+        epoch = calendar.timegm((2012, 1, 20, 8, 30, 0))
         parser = loadParser(self.itunesPath)
         songs = songsByTitle(parser)
         songs["Song A"].setDateAdded(epoch)
@@ -86,6 +91,14 @@ class ITunesWriteTest(TempLibraryTestCase):
         saved = self.reload(parser)
         self.assertEqual(saved["Song A"].dateadded, epoch)
         self.assertEqual(saved["Song B"].dateadded, epoch)
+
+    def test_dateadded_is_written_as_iso_utc_date(self):
+        parser = loadParser(self.itunesPath)
+        songsByTitle(parser)["Song B"].setDateAdded(1500000000)
+        with quiet():
+            parser.save()
+        with open(self.itunesPath, encoding="utf-8") as f:
+            self.assertIn("<date>2017-07-14T02:40:00Z</date>", f.read())
 
     def test_playdate_round_trips(self):
         parser = loadParser(self.itunesPath)
