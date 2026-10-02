@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Major Version</key><integer>1</integer>
+	<key>Minor Version</key><integer>1</integer>
+	<key>Application Version</key><string>12.4.3.1</string>
+	<key>Tracks</key>
+	<dict>
+		<key>101</key>
+		<dict>
+			<key>Track ID</key><integer>101</integer>
+			<key>Size</key><integer>1000001</integer>
+			<key>Date Added</key><date>2010-01-15T12:00:00Z</date>
+			<key>Play Count</key><integer>5</integer>
+			<key>Rating</key><integer>80</integer>
+			<key>Name</key><string>Song A</string>
+			<key>Artist</key><string>Artist A</string>
+			<key>Album</key><string>Album A</string>
+			<key>Location</key><string>file://localhost/music/song_a.mp3</string>
+		</dict>
+		<key>102</key>
+		<dict>
+			<key>Track ID</key><integer>102</integer>
+			<key>Size</key><integer>2000002</integer>
+			<key>Name</key><string>Song B</string>
+			<key>Artist</key><string>Artist B</string>
+		</dict>
+		<key>103</key>
+		<dict>
+			<key>Track ID</key><integer>103</integer>
+			<key>Size</key><integer>3000003</integer>
+			<key>Play Count</key><integer>7</integer>
+			<key>Rating</key><integer>100</integer>
+			<key>Name</key><string>Twin One</string>
+			<key>Artist</key><string>Twins</string>
+			<key>Album</key><string>Doubles</string>
+		</dict>
+		<key>104</key>
+		<dict>
+			<key>Track ID</key><integer>104</integer>
+			<key>Size</key><integer>3000003</integer>
+			<key>Play Count</key><integer>3</integer>
+			<key>Rating</key><integer>40</integer>
+			<key>Name</key><string>Twin Two</string>
+			<key>Artist</key><string>Twins</string>
+			<key>Album</key><string>Doubles</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

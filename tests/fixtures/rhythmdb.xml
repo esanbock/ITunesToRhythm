@@ -1,0 +1,42 @@
+<?xml version="1.0" standalone="yes"?>
+<rhythmdb version="1.8">
+  <entry type="song">
+    <title>Song A</title>
+    <artist>Artist A</artist>
+    <album>Album A</album>
+    <file-size>1000001</file-size>
+    <location>file:///music/song_a.mp3</location>
+    <first-seen>1275110148</first-seen>
+    <rating>2</rating>
+    <play-count>1</play-count>
+    <last-played>1301792996</last-played>
+  </entry>
+  <entry type="song">
+    <title>Song B</title>
+    <artist>Artist B</artist>
+    <album>Album B</album>
+    <file-size>2000002</file-size>
+    <location>file:///music/song_b.mp3</location>
+    <first-seen>1275110149</first-seen>
+  </entry>
+  <entry type="song">
+    <title>Twin Two</title>
+    <artist>Twins</artist>
+    <album>Doubles</album>
+    <file-size>3000003</file-size>
+    <location>file:///music/twin_two.mp3</location>
+    <first-seen>1275110150</first-seen>
+  </entry>
+  <entry type="song">
+    <title>Orphan</title>
+    <artist>Nobody</artist>
+    <album>Nowhere</album>
+    <file-size>9999999</file-size>
+    <location>file:///music/orphan.mp3</location>
+    <first-seen>1275110151</first-seen>
+  </entry>
+  <entry type="iradio">
+    <title>Some Radio Station</title>
+    <location>http://radio.example.com/stream</location>
+  </entry>
+</rhythmdb>

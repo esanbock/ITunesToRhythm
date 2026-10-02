@@ -131,6 +131,14 @@ python dumpitunes.py "iTunes Music Library.xml"
 python dumpAmazonMusic.py
 ```
 
+## Running the tests
+
+The tests use only the standard library and small sample libraries in `tests/fixtures`, so they never touch your real music libraries:
+
+```sh
+python -m unittest discover -s tests
+```
+
 ## License
 
 GNU General Public License v3. See [LICENSE.txt](LICENSE.txt).
